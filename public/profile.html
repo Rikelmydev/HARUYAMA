@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Perfil | Haruyama Sushi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#4e3b31",
+                        "secondary": "#7c6a5e",
+                        "inverse-surface": "#3d3632",
+                        "on-surface-variant": "#5a4f48",
+                        "primary-container": "#f4f1ee",
+                        "surface": "#fcfaf8",
+                        "outline": "#8b7e74",
+                        "inverse-on-surface": "#f9f5f2",
+                        "primary-fixed": "#e8e1da",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#5d4037",
+                        "on-tertiary-fixed": "#2c1500",
+                        "error": "#ba1a1a",
+                        "on-background": "#241f1c",
+                        "on-tertiary-fixed-variant": "#5d4037",
+                        "tertiary-container": "#5d4037",
+                        "surface-bright": "#fcfaf8",
+                        "on-tertiary-container": "#ffffff",
+                        "primary-fixed-dim": "#d1c5bb",
+                        "on-secondary-fixed-variant": "#5a4f48",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#e6dfd9",
+                        "tertiary-fixed": "#ffdcc1",
+                        "inverse-primary": "#d1c5bb",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#5a4f48",
+                        "surface-container": "#f1eae4",
+                        "surface-container-low": "#f9f3ee",
+                        "secondary-container": "#f4f1ee",
+                        "on-secondary-fixed": "#241f1c",
+                        "outline-variant": "#d1c5bb",
+                        "secondary-fixed-dim": "#d1c5bb",
+                        "surface-variant": "#f1eae4",
+                        "on-secondary-container": "#5a4f48",
+                        "secondary-fixed": "#e8e1da",
+                        "on-surface": "#241f1c",
+                        "surface-container-highest": "#e8e1da",
+                        "surface-container-high": "#ede5df",
+                        "tertiary-fixed-dim": "#ffb68e",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fcfaf8",
+                        "tertiary": "#5d4037",
+                        "on-primary-fixed": "#241f1c",
+                        "primary": "#3d2b1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1200px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["EB Garamond"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "display-lg": ["EB Garamond"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md">
+<!-- Header -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-500 ease-in-out">
+    <div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+        <button class="text-primary hover:opacity-70 transition-opacity duration-300" onclick="toggleMenu()">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <h1 class="font-headline-md text-[24px] tracking-[0.2em] text-primary">HARUYAMA</h1>
+        <button class="text-primary hover:opacity-70 transition-opacity duration-300">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+    </div>
+</header>
+
+<!-- Menu Mobile -->
+<div id="mobileMenu" class="fixed top-16 left-0 right-0 bg-surface z-40 border-b border-outline-variant/30 hidden">
+    <nav class="flex flex-col p-4 gap-2">
+        <a href="/" class="p-3 rounded hover:bg-primary-container transition-colors">Entrada na Fila</a>
+        <a href="/menu" class="p-3 rounded hover:bg-primary-container transition-colors">Cardápio</a>
+        <a href="/status" class="p-3 rounded hover:bg-primary-container transition-colors">Status</a>
+        <a href="/profile" class="p-3 rounded hover:bg-primary-container transition-colors">Perfil</a>
+    </nav>
+</div>
+
+<main class="pt-32 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <div class="flex flex-col items-center max-w-2xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12 w-full">
+            <h2 class="font-display-lg-mobile md:text-display-lg text-primary mb-4">Meu Perfil</h2>
+            <p class="font-body-lg text-secondary">Gerencie suas informações e preferências.</p>
+        </div>
+
+        <!-- Profile Info Card -->
+        <div class="w-full border border-outline-variant/30 rounded-lg p-8 mb-8 bg-surface-container-low">
+            <div class="flex items-center gap-6 mb-8 pb-8 border-b border-outline-variant/30">
+                <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-4xl text-primary">account_circle</span>
+                </div>
+                <div class="flex-grow">
+                    <h3 class="font-headline-sm text-primary mb-1" id="profileName">Seu Nome</h3>
+                    <p class="font-body-md text-on-surface-variant">Membro desde hoje</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="p-4 bg-surface rounded border border-outline-variant/30 text-center">
+                    <p class="font-label-caps text-label-caps text-secondary block mb-1">VISITAS</p>
+                    <p class="font-headline-sm text-primary">1</p>
+                </div>
+                <div class="p-4 bg-surface rounded border border-outline-variant/30 text-center">
+                    <p class="font-label-caps text-label-caps text-secondary block mb-1">PONTOS</p>
+                    <p class="font-headline-sm text-primary">0</p>
+                </div>
+                <div class="p-4 bg-surface rounded border border-outline-variant/30 text-center">
+                    <p class="font-label-caps text-label-caps text-secondary block mb-1">NÍVEL</p>
+                    <p class="font-headline-sm text-primary">Bronze</p>
+                </div>
+                <div class="p-4 bg-surface rounded border border-outline-variant/30 text-center">
+                    <p class="font-label-caps text-label-caps text-secondary block mb-1">CUPONS</p>
+                    <p class="font-headline-sm text-primary">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences Section -->
+        <div class="w-full mb-8">
+            <h3 class="font-headline-sm text-primary mb-6">Preferências</h3>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 border border-outline-variant/30 rounded bg-surface">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">notifications</span>
+                        <span class="font-body-md">Notificações</span>
+                    </div>
+                    <input type="checkbox" class="w-5 h-5" checked/>
+                </div>
+
+                <div class="flex items-center justify-between p-4 border border-outline-variant/30 rounded bg-surface">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">dark_mode</span>
+                        <span class="font-body-md">Modo Escuro</span>
+                    </div>
+                    <input type="checkbox" class="w-5 h-5"/>
+                </div>
+
+                <div class="flex items-center justify-between p-4 border border-outline-variant/30 rounded bg-surface">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-primary">language</span>
+                        <span class="font-body-md">Idioma</span>
+                    </div>
+                    <select class="font-body-md bg-transparent border-none focus:outline-none">
+                        <option>Português</option>
+                        <option>English</option>
+                        <option>日本語</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Favorite Dishes -->
+        <div class="w-full mb-8">
+            <h3 class="font-headline-sm text-primary mb-6">Pratos Favoritos</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 border border-outline-variant/30 rounded bg-surface-container-low">
+                    <h4 class="font-headline-sm text-primary mb-1">Omakase Haru</h4>
+                    <p class="font-body-md text-on-surface-variant text-sm">Seleção assinatura</p>
+                </div>
+                <div class="p-4 border border-outline-variant/30 rounded bg-surface-container-low">
+                    <h4 class="font-headline-sm text-primary mb-1">Sake Nigiri</h4>
+                    <p class="font-body-md text-on-surface-variant text-sm">Salmão premium</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button class="w-full px-8 py-4 bg-primary text-on-primary font-label-caps text-label-caps tracking-[0.1em] uppercase hover:opacity-90 transition-colors">
+                Editar Perfil
+            </button>
+            <button class="w-full px-8 py-4 border border-primary text-primary font-label-caps text-label-caps tracking-[0.1em] uppercase hover:bg-primary-container transition-colors">
+                Sair
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 transition-all duration-300 ease-linear">
+    <div class="flex justify-around items-center h-20 px-margin-mobile w-full">
+        <a href="/" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">hourglass_empty</span>
+            <span class="font-label-caps text-[10px] uppercase mt-1">Fila</span>
+        </a>
+        <a href="/menu" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">restaurant_menu</span>
+            <span class="font-label-caps text-[10px] uppercase mt-1">Menu</span>
+        </a>
+        <a href="/status" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">confirmation_number</span>
+            <span class="font-label-caps text-[10px] uppercase mt-1">Status</span>
+        </a>
+        <a href="/profile" class="flex flex-col items-center justify-center text-primary border-t-2 border-primary pt-2 transition-colors duration-300">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-label-caps text-[10px] uppercase mt-1">Perfil</span>
+        </a>
+    </div>
+</nav>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+}
+
+// Carregar nome do localStorage
+const profileName = localStorage.getItem('customerName') || 'Seu Nome';
+document.getElementById('profileName').textContent = profileName;
+</script>
+</body>
+</html>

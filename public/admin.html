@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin - Haruyama Sushi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#5D4037",
+                        "on-primary": "#FFFFFF",
+                        "secondary": "#705C4E",
+                        "surface": "#FAF7F2",
+                        "on-surface": "#2C241E",
+                        "outline": "#A09384"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["EB Garamond"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-sm": ["EB Garamond"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #5D4037 0%, #3E2723 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+<div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <div class="w-64 bg-gray-900 text-white p-6 fixed h-screen overflow-y-auto">
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold tracking-widest">HARUYAMA</h1>
+            <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Admin Panel</p>
+        </div>
+
+        <nav class="space-y-2">
+            <a href="#dashboard" class="block px-4 py-3 rounded bg-primary text-on-primary font-semibold transition hover:opacity-90" onclick="switchTab('dashboard')">
+                <span class="material-symbols-outlined inline mr-2 align-middle">dashboard</span>
+                Dashboard
+            </a>
+            <a href="#queue" class="block px-4 py-3 rounded text-gray-300 hover:bg-gray-800 transition" onclick="switchTab('queue')">
+                <span class="material-symbols-outlined inline mr-2 align-middle">queue</span>
+                Gerenciar Fila
+            </a>
+            <a href="#tables" class="block px-4 py-3 rounded text-gray-300 hover:bg-gray-800 transition" onclick="switchTab('tables')">
+                <span class="material-symbols-outlined inline mr-2 align-middle">table_restaurant</span>
+                Mesas
+            </a>
+            <a href="#settings" class="block px-4 py-3 rounded text-gray-300 hover:bg-gray-800 transition" onclick="switchTab('settings')">
+                <span class="material-symbols-outlined inline mr-2 align-middle">settings</span>
+                Configurações
+            </a>
+        </nav>
+
+        <div class="mt-8 pt-8 border-t border-gray-700">
+            <p class="text-xs text-gray-400 mb-2">Status do Servidor</p>
+            <div class="flex items-center">
+                <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <span class="text-sm">Online</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 flex-1">
+        <!-- Top Bar -->
+        <div class="bg-white shadow-sm border-b border-gray-200 px-8 py-4 flex justify-between items-center">
+            <h2 class="text-xl font-bold" id="pageTitle">Dashboard</h2>
+            <div class="flex items-center gap-4">
+                <div id="liveTime" class="text-sm text-gray-600"></div>
+                <button class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded transition">Sair</button>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-8">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card text-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-300 text-sm uppercase tracking-widest mb-1">Pessoas na Fila</p>
+                                <p class="text-4xl font-bold" id="queueCount">0</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-30">queue</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card text-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-300 text-sm uppercase tracking-widest mb-1">Mesas Ocupadas</p>
+                                <p class="text-4xl font-bold"><span id="occupiedTables">0</span>/15</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-30">table_restaurant</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card text-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-300 text-sm uppercase tracking-widest mb-1">Atendendo</p>
+                                <p class="text-2xl font-bold" id="currentServing">-</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-30">person</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card text-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-300 text-sm uppercase tracking-widest mb-1">Tempo Médio</p>
+                                <p class="text-2xl font-bold">~25 min</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl opacity-30">schedule</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                        <h3 class="font-bold text-lg mb-4">Ações Rápidas</h3>
+                        <div class="space-y-3">
+                            <button onclick="callNextCustomer()" class="w-full px-6 py-3 bg-primary text-on-primary rounded font-semibold hover:opacity-90 transition uppercase tracking-widest">
+                                <span class="material-symbols-outlined inline align-middle mr-2">mic</span>
+                                Chamar Próximo
+                            </button>
+                            <button onclick="completeService()" class="w-full px-6 py-3 bg-green-600 text-white rounded font-semibold hover:bg-green-700 transition uppercase tracking-widest">
+                                <span class="material-symbols-outlined inline align-middle mr-2">check_circle</span>
+                                Concluir Atendimento
+                            </button>
+                            <button onclick="freeTable()" class="w-full px-6 py-3 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 transition uppercase tracking-widest">
+                                <span class="material-symbols-outlined inline align-middle mr-2">event_available</span>
+                                Liberar Mesa
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+                        <h3 class="font-bold text-lg mb-4">Estatísticas Hoje</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Total de Atendimentos</span>
+                                <span class="font-bold text-lg">24</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Pico de Movimento</span>
+                                <span class="font-bold text-lg">12:45</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Tempo Médio de Atendimento</span>
+                                <span class="font-bold text-lg">28 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Queue Tab -->
+            <div id="queue" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <h3 class="font-bold text-lg mb-4">Fila de Espera</h3>
+                    
+                    <div id="queueList" class="space-y-3">
+                        <p class="text-gray-500 text-center py-8">Carregando fila...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Tab -->
+            <div id="tables" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <h3 class="font-bold text-lg mb-4">Mesas (15 disponíveis)</h3>
+                    
+                    <div id="tablesGrid" class="grid grid-cols-3 md:grid-cols-5 gap-4">
+                        <p class="text-gray-500">Carregando mesas...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+                    <h3 class="font-bold text-lg mb-4">Configurações do Restaurante</h3>
+                    
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Total de Mesas</label>
+                            <input type="number" value="15" class="w-full px-4 py-2 border border-gray-300 rounded" min="1" max="50"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Tempo de Atendimento Estimado (minutos)</label>
+                            <input type="number" value="25" class="w-full px-4 py-2 border border-gray-300 rounded" min="5" max="120"/>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Status do Restaurante</label>
+                            <select class="w-full px-4 py-2 border border-gray-300 rounded">
+                                <option>Aberto</option>
+                                <option>Fechado</option>
+                                <option>Pausa</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full px-6 py-3 bg-primary text-on-primary rounded font-semibold hover:opacity-90 transition uppercase tracking-widest">
+                            Salvar Configurações
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+
+function switchTab(tab) {
+    // Esconder todos os tabs
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    
+    // Mostrar o tab selecionado
+    document.getElementById(tab).classList.remove('hidden');
+    
+    // Atualizar título
+    const titles = {
+        dashboard: 'Dashboard',
+        queue: 'Gerenciar Fila',
+        tables: 'Mesas',
+        settings: 'Configurações'
+    };
+    document.getElementById('pageTitle').textContent = titles[tab];
+    
+    // Atualizar sidebar
+    document.querySelectorAll('#queue + a, #tables + a, #settings + a, a[href="#dashboard"]').forEach(el => {
+        el.classList.remove('bg-primary', 'text-on-primary');
+        el.classList.add('text-gray-300');
+    });
+    document.querySelector(`a[href="#${tab}"]`).classList.add('bg-primary', 'text-on-primary');
+    document.querySelector(`a[href="#${tab}"]`).classList.remove('text-gray-300');
+}
+
+function updateDashboard(data) {
+    document.getElementById('queueCount').textContent = data.queue.length;
+    document.getElementById('occupiedTables').textContent = data.occupiedTables;
+    
+    if (data.currentServing) {
+        document.getElementById('currentServing').textContent = '#' + data.currentServing.number;
+    } else {
+        document.getElementById('currentServing').textContent = 'Ninguém';
+    }
+}
+
+function updateQueue(data) {
+    const queueList = document.getElementById('queueList');
+    
+    if (data.queue.length === 0) {
+        queueList.innerHTML = '<p class="text-gray-500 text-center py-8">Fila vazia</p>';
+        return;
+    }
+    
+    queueList.innerHTML = data.queue.map((customer, index) => `
+        <div class="flex items-center justify-between p-4 bg-gray-50 rounded border border-gray-200">
+            <div>
+                <p class="font-semibold text-lg">#${customer.number}</p>
+                <p class="text-gray-600">${customer.name} - ${customer.guests} pessoa(s)</p>
+            </div>
+            <div class="text-right">
+                <p class="text-sm text-gray-500">Posição: ${index + 1}</p>
+                <p class="text-sm text-gray-500">~${(index + 1) * 10} min de espera</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateTables(data) {
+    const tablesGrid = document.getElementById('tablesGrid');
+    let html = '';
+    
+    for (let i = 1; i <= data.tables; i++) {
+        const isOccupied = i <= data.occupiedTables;
+        html += `
+            <div class="aspect-square rounded-lg flex items-center justify-center font-bold text-lg cursor-pointer transition hover:opacity-90 ${
+                isOccupied 
+                    ? 'bg-red-500 text-white' 
+                    : 'bg-green-500 text-white'
+            }">
+                Mesa ${i}
+            </div>
+        `;
+    }
+    
+    tablesGrid.innerHTML = html;
+}
+
+function callNextCustomer() {
+    socket.emit('call-next');
+    alert('Próximo cliente chamado!');
+}
+
+function completeService() {
+    socket.emit('complete-service');
+    alert('Atendimento concluído!');
+}
+
+function freeTable() {
+    socket.emit('free-table');
+    alert('Mesa liberada!');
+}
+
+// Atualizar hora
+function updateTime() {
+    const now = new Date();
+    document.getElementById('liveTime').textContent = now.toLocaleTimeString('pt-BR');
+}
+setInterval(updateTime, 1000);
+updateTime();
+
+// WebSocket listeners
+socket.on('queue-update', (data) => {
+    updateDashboard(data);
+    updateQueue(data);
+    updateTables(data);
+});
+
+// Carregar dados iniciais
+fetch('/api/queue')
+    .then(res => res.json())
+    .then(data => {
+        updateDashboard(data);
+        updateQueue(data);
+        updateTables(data);
+    });
+
+// Inicializar dashboard
+switchTab('dashboard');
+</script>
+</body>
+</html>

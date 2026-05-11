@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Status da Fila | Haruyama Sushi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#4e342e",
+                        "secondary": "#795548",
+                        "inverse-surface": "#3e2723",
+                        "on-surface-variant": "#5d4037",
+                        "primary-container": "#efebe9",
+                        "surface": "#fbf9f6",
+                        "outline": "#8d6e63",
+                        "inverse-on-surface": "#fdfbe9",
+                        "primary-fixed": "#d7ccc8",
+                        "error-container": "#f9dad6",
+                        "surface-tint": "#5d4037",
+                        "on-tertiary-fixed": "#2d1a12",
+                        "error": "#b71c1c",
+                        "on-background": "#2d1a12",
+                        "on-tertiary-fixed-variant": "#4e342e",
+                        "tertiary-container": "#d7ccc8",
+                        "surface-bright": "#fffdfa",
+                        "on-tertiary-container": "#4e342e",
+                        "primary-fixed-dim": "#bcaaa4",
+                        "on-secondary-fixed-variant": "#4e342e",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#e7e0da",
+                        "tertiary-fixed": "#efebe9",
+                        "inverse-primary": "#bcaaa4",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#410002",
+                        "on-primary-fixed-variant": "#4e342e",
+                        "surface-container": "#f5f0eb",
+                        "surface-container-low": "#faf5f0",
+                        "secondary-container": "#d7ccc8",
+                        "on-secondary-fixed": "#2d1a12",
+                        "outline-variant": "#d7ccc8",
+                        "secondary-fixed-dim": "#bcaaa4",
+                        "surface-variant": "#efebe9",
+                        "on-secondary-container": "#4e342e",
+                        "secondary-fixed": "#d7ccc8",
+                        "on-surface": "#2d1a12",
+                        "surface-container-highest": "#efebe9",
+                        "surface-container-high": "#e7e0da",
+                        "tertiary-fixed-dim": "#bcaaa4",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fbf9f6",
+                        "tertiary": "#5d4037",
+                        "on-primary-fixed": "#2d1a12",
+                        "primary": "#5d4037"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1200px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["EB Garamond"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "display-lg": ["EB Garamond"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .mountain-peak {
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased">
+<!-- Header -->
+<header class="bg-surface/90 backdrop-blur-xl border-b border-outline-variant/50 fixed top-0 w-full z-50 transition-all duration-500 ease-in-out">
+    <div class="flex justify-between items-center px-gutter h-20 w-full max-w-container-max mx-auto">
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMenu()" class="cursor-pointer text-primary">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+        <div class="flex flex-col items-center">
+            <div class="flex gap-1 mb-1">
+                <div class="w-3 h-2 bg-primary mountain-peak opacity-40"></div>
+                <div class="w-4 h-3 bg-primary mountain-peak"></div>
+                <div class="w-3 h-2 bg-primary mountain-peak opacity-40"></div>
+            </div>
+            <h1 class="font-headline-md text-2xl tracking-[0.2em] text-primary">HARUYAMA</h1>
+            <span class="font-label-caps text-[10px] tracking-[0.3em] text-secondary -mt-1">SUSHI</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="toggleMenu()" class="cursor-pointer text-primary">
+                <span class="material-symbols-outlined">notifications</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Menu Mobile -->
+<div id="mobileMenu" class="fixed top-20 left-0 right-0 bg-surface z-40 border-b border-outline-variant/30 hidden">
+    <nav class="flex flex-col p-4 gap-2">
+        <a href="/" class="p-3 rounded hover:bg-primary-container transition-colors">Entrada na Fila</a>
+        <a href="/menu" class="p-3 rounded hover:bg-primary-container transition-colors">Cardápio</a>
+        <a href="/status" class="p-3 rounded hover:bg-primary-container transition-colors">Status</a>
+        <a href="/profile" class="p-3 rounded hover:bg-primary-container transition-colors">Perfil</a>
+    </nav>
+</div>
+
+<main class="pt-40 pb-32 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <div class="flex flex-col items-center justify-center text-center max-w-2xl mx-auto">
+        <h2 class="font-display-lg-mobile md:text-display-lg text-primary mb-2">Status da Fila</h2>
+        <p class="font-body-md text-secondary mb-12 italic">Bem-vindo ao Haruyama Sushi. Estamos preparando seu lugar nas montanhas.</p>
+
+        <!-- Status Card -->
+        <div class="w-full relative aspect-square md:aspect-[4/3] overflow-hidden border border-outline-variant/50 mb-12 bg-surface-container">
+            <img class="w-full h-full object-cover sepia-[0.3] opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDQpekch_gvSNmasHrEv24bFc9KbzzDzOdmnqkUxL-hYEkWRIRvTDKN7Y_tHNOZeiuEo4Q9VKltj8DhQekRN3qs5ygrcXVKp-D46fgQBstYV1ltyHUkOjDJfE-g28CwlBliiyLGoCJVgOgFizBFtDJLWTM-B2D04l567jckw2ZBzWo0ET5eYZmN8Cvrs8640p1iPmA7XXOMUuDwHGI6J0YZ8Nht4tGt_WoCBL3-klEI4vPNemwwqgt1GIKfpRUPdYV1R2wmKUYeY1B"/>
+            <div class="absolute inset-0 flex flex-col items-center justify-center bg-background/30 backdrop-blur-[1px]">
+                <div class="bg-surface p-10 border border-outline-variant text-center max-w-xs w-full shadow-lg relative">
+                    <div class="absolute -top-2 left-1/2 -translate-x-1/2 flex gap-1">
+                        <div class="w-4 h-2 bg-primary mountain-peak"></div>
+                    </div>
+                    <span class="font-label-caps text-label-caps text-secondary block mb-3 border-b border-outline-variant/30 pb-2">SEU NÚMERO</span>
+                    <div class="font-display-lg text-primary mb-6">#<span id="queueNumber">--</span></div>
+                    <div class="grid grid-cols-2 gap-4 border-t border-outline-variant/30 pt-4">
+                        <div>
+                            <span class="font-label-caps text-[10px] text-secondary block mb-1">POSIÇÃO</span>
+                            <span class="font-headline-sm text-primary"><span id="position">-</span>º</span>
+                        </div>
+                        <div>
+                            <span class="font-label-caps text-[10px] text-secondary block mb-1">TEMPO</span>
+                            <span class="font-headline-sm text-primary"><span id="waitTime">--</span> min</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="w-full max-w-md mx-auto space-y-10">
+            <div class="space-y-4">
+                <div class="flex justify-between items-end">
+                    <span class="font-label-caps text-label-caps text-primary tracking-widest">PROGRESSO DA FILA</span>
+                    <span class="font-body-md text-secondary"><span id="progressPercent">0</span>%</span>
+                </div>
+                <div class="w-full h-[2px] bg-outline-variant/50 relative overflow-hidden">
+                    <div id="progressBar" class="absolute left-0 top-0 h-full bg-primary w-0 transition-all duration-1000 ease-in-out"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                <a href="/menu" class="p-8 border border-outline-variant/40 flex flex-col items-center text-center bg-surface hover:bg-surface-container transition-colors cursor-pointer group">
+                    <span class="material-symbols-outlined text-primary mb-3 group-hover:scale-110 transition-transform">restaurant_menu</span>
+                    <span class="font-label-caps text-label-caps text-primary">VER MENU</span>
+                </a>
+                <a href="/" class="p-8 border border-outline-variant/40 flex flex-col items-center text-center bg-surface hover:bg-surface-container transition-colors cursor-pointer group">
+                    <span class="material-symbols-outlined text-primary mb-3 group-hover:scale-110 transition-transform">landscape</span>
+                    <span class="font-label-caps text-label-caps text-primary">NOSSA ORIGEM</span>
+                </a>
+                <button class="p-8 border border-outline-variant/40 flex flex-col items-center text-center bg-surface hover:bg-surface-container transition-colors cursor-pointer group">
+                    <span class="material-symbols-outlined text-primary mb-3 group-hover:scale-110 transition-transform">chat_bubble_outline</span>
+                    <span class="font-label-caps text-label-caps text-primary">CONTATO</span>
+                </button>
+            </div>
+
+            <div class="flex justify-center pt-4">
+                <div class="flex gap-2 opacity-20">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/95 backdrop-blur-xl border-t border-outline-variant/50 transition-all duration-300 ease-linear">
+    <div class="flex justify-around items-center h-20 px-margin-mobile w-full max-w-container-max mx-auto">
+        <a href="/" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">hourglass_empty</span>
+            <span class="font-label-caps text-[10px] mt-1 uppercase">Fila</span>
+        </a>
+        <a href="/menu" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">restaurant_menu</span>
+            <span class="font-label-caps text-[10px] mt-1 uppercase">Menu</span>
+        </a>
+        <a href="/status" class="flex flex-col items-center justify-center text-primary border-t-2 border-primary pt-2 transition-all duration-300">
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+            <span class="font-label-caps text-[10px] mt-1 uppercase font-bold">Status</span>
+        </a>
+        <a href="/profile" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-label-caps text-[10px] mt-1 uppercase">Perfil</span>
+        </a>
+    </div>
+</nav>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const socket = io();
+
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+}
+
+function updateStatus(data) {
+    // Atualizar número da fila
+    const queueNumber = localStorage.getItem('queueNumber');
+    if (queueNumber) {
+        document.getElementById('queueNumber').textContent = queueNumber;
+        
+        // Encontrar a posição do cliente atual na fila
+        const customer = data.queue.find(c => c.number == queueNumber);
+        if (customer) {
+            document.getElementById('position').textContent = customer.position;
+            
+            // Calcular tempo de espera (aproximadamente 10 minutos por pessoa)
+            const waitTime = customer.position * 10;
+            document.getElementById('waitTime').textContent = waitTime;
+        }
+    }
+    
+    // Atualizar progresso da fila
+    const totalTables = data.tables;
+    const occupiedTables = data.occupiedTables;
+    const percentComplete = Math.round((occupiedTables / totalTables) * 100);
+    document.getElementById('progressPercent').textContent = percentComplete;
+    document.getElementById('progressBar').style.width = percentComplete + '%';
+}
+
+socket.on('queue-update', (data) => {
+    updateStatus(data);
+});
+
+socket.on('queue-number', (number) => {
+    localStorage.setItem('queueNumber', number);
+});
+
+// Buscar status inicial
+fetch('/api/queue')
+    .then(res => res.json())
+    .then(data => updateStatus(data));
+</script>
+</body>
+</html>

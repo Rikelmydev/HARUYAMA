@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Haruyama Sushi - Entrar na Fila</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#4A3728",
+                        "secondary": "#705C4E",
+                        "inverse-surface": "#322A24",
+                        "on-surface-variant": "#5C524B",
+                        "primary-container": "#E8E1D9",
+                        "surface": "#FAF7F2",
+                        "outline": "#A09384",
+                        "inverse-on-surface": "#FDFBF7",
+                        "primary-fixed": "#D4C7B8",
+                        "error-container": "#F9DEDC",
+                        "surface-tint": "#5D4037",
+                        "on-tertiary-fixed": "#3E2723",
+                        "error": "#B3261E",
+                        "on-background": "#2C241E",
+                        "on-tertiary-fixed-variant": "#4E342E",
+                        "tertiary-container": "#D7CCC8",
+                        "surface-bright": "#FAF7F2",
+                        "on-tertiary-container": "#211513",
+                        "primary-fixed-dim": "#C2B09F",
+                        "on-secondary-fixed-variant": "#4D3B31",
+                        "on-secondary": "#FFFFFF",
+                        "surface-dim": "#E5DDD3",
+                        "tertiary-fixed": "#EFEBE9",
+                        "inverse-primary": "#E1D5C9",
+                        "on-tertiary": "#FFFFFF",
+                        "on-error-container": "#410E0B",
+                        "on-primary-fixed-variant": "#3B2D24",
+                        "surface-container": "#F2EBE1",
+                        "surface-container-low": "#F8F1E9",
+                        "secondary-container": "#EBDED2",
+                        "on-secondary-fixed": "#251912",
+                        "outline-variant": "#D0C4B8",
+                        "secondary-fixed-dim": "#D3C2B4",
+                        "surface-variant": "#EDE3D9",
+                        "on-secondary-container": "#2A1D15",
+                        "secondary-fixed": "#EAE0D5",
+                        "on-surface": "#2C241E",
+                        "surface-container-highest": "#E6DDD2",
+                        "surface-container-high": "#ECE3D8",
+                        "tertiary-fixed-dim": "#D7CCC8",
+                        "on-primary": "#FFFFFF",
+                        "on-error": "#FFFFFF",
+                        "surface-container-lowest": "#FFFFFF",
+                        "background": "#FAF7F2",
+                        "tertiary": "#5D4037",
+                        "on-primary-fixed": "#241A14",
+                        "primary": "#5D4037"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1200px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["EB Garamond"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "display-lg": ["EB Garamond"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .entry-bg {
+            background:
+                radial-gradient(circle at top left, rgba(93, 64, 55, 0.14), transparent 34%),
+                radial-gradient(circle at top right, rgba(160, 147, 132, 0.18), transparent 28%),
+                radial-gradient(circle at bottom center, rgba(224, 213, 201, 0.7), transparent 42%),
+                linear-gradient(180deg, #fcf8f3 0%, #f6efe7 54%, #efe5d9 100%);
+        }
+        .entry-bg::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.24) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+            background-size: 44px 44px, 44px 44px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 80%);
+            opacity: 0.32;
+            z-index: 0;
+        }
+        .entry-bg::after {
+            content: "";
+            position: fixed;
+            inset: auto -10% -18% -10%;
+            height: 42vh;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(93, 64, 55, 0) 0%, rgba(93, 64, 55, 0.08) 100%);
+            filter: blur(24px);
+            z-index: 0;
+        }
+        .washi-texture {
+            background-color: transparent;
+            background-image: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 200, "GRAD" 0, "opsz" 24
+        }
+        .mountain-peak {
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%)
+        }
+        body {
+            min-height: max(884px, 100dvh)
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface entry-bg min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Mountain Decorative Header Element -->
+<div class="fixed top-0 left-1/2 -translate-x-1/2 opacity-5 pointer-events-none select-none z-0">
+    <svg class="w-[120vw] h-auto text-primary" viewbox="0 0 1000 200">
+        <path d="M0,200 L200,50 L400,180 L600,20 L800,150 L1000,80 L1000,200 Z" fill="currentColor"></path>
+    </svg>
+</div>
+
+<!-- Header -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-500 ease-in-out">
+    <div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+        <button class="text-primary hover:opacity-70 transition-opacity duration-300" onclick="toggleMenu()">
+            <span class="material-symbols-outlined" data-icon="menu">menu</span>
+        </button>
+        <h1 class="font-headline-md text-[24px] md:text-headline-md tracking-[0.3em] text-primary uppercase">Haruyama</h1>
+        <a href="#" class="text-primary hover:opacity-70 transition-opacity duration-300">
+            <span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+        </a>
+    </div>
+</header>
+
+<!-- Menu Mobile -->
+<div id="mobileMenu" class="fixed top-16 left-0 right-0 bg-surface z-40 border-b border-outline-variant/30 hidden">
+    <nav class="flex flex-col p-4 gap-2">
+        <a href="/" class="p-3 rounded hover:bg-primary-container transition-colors">Entrada na Fila</a>
+        <a href="/menu" class="p-3 rounded hover:bg-primary-container transition-colors">Cardápio</a>
+        <a href="/admin" class="p-3 rounded hover:bg-primary-container transition-colors">Admin</a>
+    </nav>
+</div>
+
+<main class="flex-grow pt-28 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <section class="lg:col-span-7 flex flex-col gap-6">
+            <div class="inline-flex items-center gap-3 self-start px-4 py-2 rounded-full bg-surface/80 border border-outline-variant/40 backdrop-blur-sm">
+                <span class="w-2 h-2 rounded-full bg-primary"></span>
+                <span class="font-label-caps text-[10px] tracking-[0.3em] text-secondary uppercase">Acesso do cliente</span>
+            </div>
+
+            <div class="space-y-4 max-w-2xl">
+                <span class="font-label-caps text-label-caps text-secondary block uppercase tracking-[0.22em]">Reserva & Fila</span>
+                <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary leading-tight">Entre na fila com seu nome</h2>
+                <p class="font-body-lg text-body-lg text-secondary">
+                    Cadastro rápido com uma tela limpa para o cliente acompanhar a chamada da mesa em tempo real.
+                </p>
+            </div>
+
+            <form id="queueForm" class="grid grid-cols-1 gap-5 p-6 md:p-8 bg-surface/85 backdrop-blur-md border border-outline-variant/40 shadow-[0_18px_60px_rgba(93,64,55,0.08)]">
+                <div>
+                    <label class="font-label-caps text-label-caps text-secondary mb-2 block uppercase tracking-widest" for="name">Nome Completo</label>
+                    <input class="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors font-body-md text-body-md placeholder:text-outline-variant/60" id="name" name="name" placeholder="Ex: Hiroshi Tanaka" type="text" required/>
+                </div>
+
+                <div>
+                    <label class="font-label-caps text-label-caps text-secondary mb-2 block uppercase tracking-widest" for="cpf">CPF</label>
+                    <input class="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors font-body-md text-body-md placeholder:text-outline-variant/60" id="cpf" name="cpf" placeholder="000.000.000-00" type="text" inputmode="numeric" maxlength="14" required/>
+                </div>
+
+                <div>
+                    <label class="font-label-caps text-label-caps text-secondary mb-2 block uppercase tracking-widest" for="guests">Convidados</label>
+                    <div class="flex items-center gap-3">
+                        <input class="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors font-body-md text-body-md" id="guests" max="10" min="1" name="guests" type="number" value="2" required/>
+                        <div class="flex gap-2">
+                            <button class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:bg-secondary-container transition-colors text-primary" type="button" onclick="decreaseGuests()">
+                                <span class="material-symbols-outlined text-[20px]">remove</span>
+                            </button>
+                            <button class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:bg-secondary-container transition-colors text-primary" type="button" onclick="increaseGuests()">
+                                <span class="material-symbols-outlined text-[20px]">add</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+                    <div class="flex items-center gap-2 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-sm">schedule</span>
+                        <p class="font-body-md text-[14px] italic">Espera estimada: 25-40 min</p>
+                    </div>
+                    <button class="w-full sm:w-auto px-12 py-5 bg-primary text-on-primary font-label-caps text-label-caps tracking-[0.2em] uppercase hover:opacity-95 transition-all duration-300 shadow-sm" type="submit">
+                        Entrar na Fila
+                    </button>
+                </div>
+            </form>
+
+            <div id="queueError" class="hidden p-4 border border-error/30 bg-error-container text-on-error-container font-body-md"></div>
+            <div id="queueSuccess" class="hidden p-4 border border-secondary/20 bg-secondary-container text-on-secondary-container font-body-md"></div>
+        </section>
+
+        <aside class="lg:col-span-5 sticky top-28 space-y-6">
+            <div class="p-6 md:p-8 bg-surface/90 backdrop-blur-md border border-outline-variant/40 shadow-[0_18px_60px_rgba(93,64,55,0.08)]">
+                <div class="flex items-start justify-between gap-4 mb-6">
+                    <div>
+                        <p class="font-label-caps text-label-caps text-secondary uppercase tracking-[0.22em]">Status atual</p>
+                        <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Seu atendimento</h3>
+                    </div>
+                    <span id="statusBadge" class="px-3 py-1 rounded-full text-[10px] font-label-caps uppercase tracking-[0.18em] bg-secondary-container text-on-secondary-container">Aguardando dados</span>
+                </div>
+
+                <div class="p-6 border border-outline-variant/30 bg-surface-container-low text-center">
+                    <p class="font-label-caps text-[10px] uppercase tracking-[0.2em] text-secondary mb-2">Cliente na fila</p>
+                    <p id="customerNameDisplay" class="font-display-lg-mobile text-primary">Nenhum cadastro ativo</p>
+                    <p id="customerMetaDisplay" class="font-body-md text-on-surface-variant mt-3">Quando sua vez chegar, o número e o CPF do cliente vão aparecer aqui.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-5">
+                    <div class="p-4 bg-primary-container/70 border border-outline-variant/30">
+                        <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">Número</p>
+                        <p class="font-display-lg-mobile text-primary" id="queueNumber">--</p>
+                    </div>
+                    <div class="p-4 bg-primary-container/70 border border-outline-variant/30">
+                        <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">CPF</p>
+                        <p class="font-headline-sm text-primary" id="queueCpf">--</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 bg-surface/90 backdrop-blur-md border border-outline-variant/40 shadow-[0_18px_60px_rgba(93,64,55,0.08)]">
+                <div class="flex items-center justify-between mb-5">
+                    <div>
+                        <p class="font-label-caps text-label-caps text-secondary uppercase tracking-[0.22em]">Fila ao vivo</p>
+                        <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Apenas sua identificação</h3>
+                    </div>
+                    <span class="text-sm text-on-surface-variant" id="queueCount">Privado</span>
+                </div>
+                <div class="p-4 border border-dashed border-outline-variant/50 text-on-surface-variant font-body-md">
+                    A lista de outros clientes não é exibida nesta tela.
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+
+<script>
+const socket = window.io ? io(window.location.origin, {
+    transports: ['websocket', 'polling']
+}) : null;
+
+const customerState = {
+    number: null,
+    name: '',
+    cpf: '',
+    guests: 2,
+    tableId: null
+};
+
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+}
+
+function setMessage(elementId, message, show = true) {
+    const element = document.getElementById(elementId);
+    element.textContent = message;
+    element.classList.toggle('hidden', !show);
+}
+
+function formatCpf(value) {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`;
+}
+
+function setStatusBadge(text, variant = 'waiting') {
+    const badge = document.getElementById('statusBadge');
+    badge.textContent = text;
+    badge.className = 'px-3 py-1 rounded-full text-[10px] font-label-caps uppercase tracking-[0.18em]';
+
+    const variants = {
+        waiting: 'bg-secondary-container text-on-secondary-container',
+        seated: 'bg-primary-container text-on-primary-container',
+        served: 'bg-primary text-on-primary',
+        error: 'bg-error-container text-on-error-container'
+    };
+
+    badge.className += ` ${variants[variant] || variants.waiting}`;
+}
+
+function increaseGuests() {
+    const input = document.getElementById('guests');
+    if (Number(input.value) < 10) {
+        input.value = Number(input.value) + 1;
+    }
+}
+
+function decreaseGuests() {
+    const input = document.getElementById('guests');
+    if (Number(input.value) > 1) {
+        input.value = Number(input.value) - 1;
+    }
+}
+
+function getCurrentEntry(data) {
+    const name = localStorage.getItem('customerName') || customerState.name;
+    if (!name) return null;
+
+    const queueMatch = data.queue.find((item) => item.name === name && Number(item.number) === Number(customerState.number));
+    if (queueMatch) return queueMatch;
+
+    const tableMatch = (data.tableLayout || []).find((table) => table.customer && table.customer.name === name);
+    return tableMatch ? { ...tableMatch.customer, tableLabel: tableMatch.label } : null;
+}
+
+function renderCustomerStatus(data) {
+    const current = getCurrentEntry(data);
+    if (!current) {
+        document.getElementById('customerNameDisplay').textContent = 'Nenhum cadastro ativo';
+        document.getElementById('customerMetaDisplay').textContent = 'Preencha o formulário para acompanhar a fila em tempo real.';
+        document.getElementById('queueNumber').textContent = '--';
+        document.getElementById('queueCpf').textContent = '--';
+        setStatusBadge('Aguardando dados', 'waiting');
+        return;
+    }
+
+    const tableLabel = current.tableLabel || current.tableId || 'Mesa';
+    const isSeated = current.status === 'seated' || Boolean(current.tableId);
+    const isWaiting = current.status === 'waiting' || current.status === 'confirmed';
+    const cpf = formatCpf(current.cpf || customerState.cpf);
+
+    document.getElementById('customerNameDisplay').textContent = current.name;
+    document.getElementById('customerMetaDisplay').textContent = isSeated
+        ? `Sua mesa está pronta: ${tableLabel}.`
+        : 'Acompanhe sua posição aqui enquanto aguarda a chamada.';
+    document.getElementById('queueNumber').textContent = current.number || '--';
+    document.getElementById('queueCpf').textContent = cpf;
+
+    if (isSeated) {
+        setStatusBadge('Na mesa', 'seated');
+    } else if (isWaiting) {
+        setStatusBadge('Na fila', 'waiting');
+    } else {
+        setStatusBadge('Finalizado', 'served');
+    }
+}
+
+function syncFromLocalStorage() {
+    const name = localStorage.getItem('customerName') || '';
+    const cpf = localStorage.getItem('customerCpf') || '';
+    const guests = localStorage.getItem('customerGuests') || '2';
+
+    document.getElementById('name').value = name;
+    document.getElementById('cpf').value = cpf;
+    document.getElementById('guests').value = guests;
+    customerState.name = name;
+    customerState.cpf = cpf;
+    customerState.guests = guests;
+}
+
+function hideFeedback() {
+    setMessage('queueError', '', false);
+    setMessage('queueSuccess', '', false);
+}
+
+function showTableReadyNotification(tableLabel, tableId) {
+    const notificationId = `table-ready:${tableId}`;
+    if (customerState.tableId === tableId && window.lastTableReadyNotification === notificationId) {
+        return;
+    }
+
+    window.lastTableReadyNotification = notificationId;
+    customerState.tableId = tableId;
+
+    const message = `Sua vez chegou. Dirija-se à ${tableLabel}.`;
+    setMessage('queueSuccess', message, true);
+    setStatusBadge('Mesa chamada', 'seated');
+
+    if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Haruyama Sushi', {
+            body: message,
+            tag: notificationId
+        });
+    }
+}
+
+document.getElementById('queueForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    hideFeedback();
+
+    const name = document.getElementById('name').value.trim();
+    const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+    const guests = Number(document.getElementById('guests').value);
+
+    if (!socket) {
+        setMessage('queueError', 'Conecte a página pelo servidor Node.js em http://localhost:3000 para usar a fila ao vivo.', true);
+        return;
+    }
+
+    localStorage.setItem('customerName', name);
+    localStorage.setItem('customerCpf', cpf);
+    localStorage.setItem('customerGuests', String(guests));
+
+    customerState.name = name;
+    customerState.cpf = cpf;
+    customerState.guests = guests;
+
+    socket.emit('add-to-queue', { name, cpf, guests });
+});
+
+socket.on('queue-number', (number) => {
+    customerState.number = number;
+    setMessage('queueSuccess', `Cadastro confirmado para ${customerState.name}.`, true);
+    renderCustomerStatus({
+        queue: [{ number, name: customerState.name, cpf: customerState.cpf, guests: customerState.guests, status: 'waiting' }],
+        tableLayout: []
+    });
+});
+
+socket?.on('queue-confirmed', (customer) => {
+    customerState.number = customer.number;
+    customerState.name = customer.name;
+    customerState.cpf = customer.cpf;
+    customerState.guests = customer.guests;
+});
+
+socket?.on('table-ready', (payload) => {
+    if (!payload || !payload.table || !payload.customer) {
+        return;
+    }
+
+    showTableReadyNotification(payload.table.label, payload.table.id);
+});
+
+socket?.on('queue-error', (payload) => {
+    setMessage('queueError', payload.message || 'Não foi possível concluir a operação.', true);
+    setStatusBadge('Erro', 'error');
+});
+
+socket?.on('queue-update', (data) => {
+    renderCustomerStatus(data);
+});
+
+document.getElementById('name').addEventListener('input', () => {
+    customerState.name = document.getElementById('name').value;
+});
+
+document.getElementById('guests').addEventListener('change', () => {
+    customerState.guests = Number(document.getElementById('guests').value);
+});
+
+function loadQueueState() {
+    fetch('/api/queue')
+        .then((res) => res.json())
+        .then((data) => {
+            renderCustomerStatus(data);
+        })
+        .catch(() => {
+            setMessage('queueError', 'Não foi possível carregar o estado da fila no momento.', true);
+        });
+}
+
+syncFromLocalStorage();
+loadQueueState();
+
+if (!socket) {
+    setMessage('queueError', 'O Socket.io não carregou. Abra o site pelo servidor Node em http://localhost:3000.', true);
+} else {
+    socket.on('connect', () => {
+        hideFeedback();
+        setStatusBadge('Conectado', 'waiting');
+    });
+}
+
+if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission().catch(() => {});
+}
+</script>
+</body>
+</html>

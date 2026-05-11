@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cardápio | Haruyama Sushi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=Hanken+Grotesk:wght@400;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#4e4439",
+                        "secondary": "#7a6f64",
+                        "inverse-surface": "#3d3935",
+                        "on-surface-variant": "#6e685f",
+                        "primary-container": "#f4f1ee",
+                        "surface": "#fbf9f7",
+                        "outline": "#8a8279",
+                        "inverse-on-surface": "#f9f6f3",
+                        "primary-fixed": "#e8e1da",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#6d5e4f",
+                        "on-tertiary-fixed": "#410003",
+                        "error": "#ba1a1a",
+                        "on-background": "#201b17",
+                        "on-tertiary-fixed-variant": "#930010",
+                        "tertiary-container": "#410003",
+                        "surface-bright": "#fbf9f7",
+                        "on-tertiary-container": "#f04440",
+                        "primary-fixed-dim": "#d1c5b8",
+                        "on-secondary-fixed-variant": "#5a524a",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#e2ded9",
+                        "tertiary-fixed": "#ffdad6",
+                        "inverse-primary": "#d1c5b8",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#544a40",
+                        "surface-container": "#f4f1ee",
+                        "surface-container-low": "#f9f6f3",
+                        "secondary-container": "#eeebe7",
+                        "on-secondary-fixed": "#251e18",
+                        "outline-variant": "#d2ccc3",
+                        "secondary-fixed-dim": "#d2c6bc",
+                        "surface-variant": "#eeebe7",
+                        "on-secondary-container": "#524b43",
+                        "secondary-fixed": "#efe4db",
+                        "on-surface": "#201b17",
+                        "surface-container-highest": "#e9e5e1",
+                        "surface-container-high": "#efece9",
+                        "tertiary-fixed-dim": "#ffb3ac",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "background": "#fbf9f7",
+                        "tertiary": "#4a3c31",
+                        "on-primary-fixed": "#241a12",
+                        "primary": "#4a3c31"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1200px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["EB Garamond"],
+                        "label-caps": ["Hanken Grotesk"],
+                        "display-lg": ["EB Garamond"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 transition-all duration-500 ease-in-out">
+    <div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+        <button class="text-primary hover:opacity-70 transition-opacity duration-300" onclick="toggleMenu()">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="flex flex-col items-center">
+            <h1 class="font-headline-md text-2xl tracking-[0.2em] text-primary">HARUYAMA</h1>
+            <span class="text-[8px] font-label-caps tracking-[0.4em] -mt-1 opacity-60">SUSHI & ZEN</span>
+        </div>
+        <button class="text-primary hover:opacity-70 transition-opacity duration-300" onclick="toggleMenu()">
+            <span class="material-symbols-outlined">notifications</span>
+        </button>
+    </div>
+</header>
+
+<!-- Menu Mobile -->
+<div id="mobileMenu" class="fixed top-16 left-0 right-0 bg-surface z-40 border-b border-outline-variant/30 hidden">
+    <nav class="flex flex-col p-4 gap-2">
+        <a href="/" class="p-3 rounded hover:bg-primary-container transition-colors">Entrada na Fila</a>
+        <a href="/menu" class="p-3 rounded hover:bg-primary-container transition-colors">Cardápio</a>
+        <a href="/status" class="p-3 rounded hover:bg-primary-container transition-colors">Status</a>
+        <a href="/profile" class="p-3 rounded hover:bg-primary-container transition-colors">Perfil</a>
+    </nav>
+</div>
+
+<main class="pt-24 pb-32 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <!-- Header Section -->
+    <section class="mb-12 relative">
+        <div class="absolute -top-4 left-0 text-primary/10 select-none pointer-events-none">
+            <span class="material-symbols-outlined text-6xl">landscape</span>
+        </div>
+        <h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-4 relative">Cardápio Haruyama</h2>
+        <div class="w-12 h-px bg-primary mb-8"></div>
+        <p class="font-body-lg text-body-lg text-secondary max-w-2xl">
+            Sinta a essência da montanha e a pureza dos ingredientes. No Haruyama, cada corte é um tributo à tradição e ao equilíbrio natural.
+        </p>
+    </section>
+
+    <!-- Category Filter -->
+    <nav class="flex gap-8 overflow-x-auto hide-scrollbar mb-16 border-b border-outline-variant/30 pb-4">
+        <button class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-4 whitespace-nowrap">SUSHI</button>
+        <button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors pb-4 whitespace-nowrap">RAMEN</button>
+        <button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors pb-4 whitespace-nowrap">ENTRADAS</button>
+        <button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors pb-4 whitespace-nowrap">SAKE BAR</button>
+        <button class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors pb-4 whitespace-nowrap">SOBREMESAS</button>
+    </nav>
+
+    <!-- Menu Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
+        <!-- Featured Item -->
+        <div class="md:col-span-8 group">
+            <div class="relative aspect-[16/9] overflow-hidden mb-4 border border-outline-variant/30">
+                <img class="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6sWTVUfmIHmlVJpesj3aRnCc5vX7jmGvqIEDGlz73cO6iLjuifKCAG2_CttKh0CENn4LDspzs5a0OMr8eLSWSgve6wOkaE-dwUd1mg2M5oARorIg63NNqj-is_TSoIL8peZ6Ys2HsafqmDpv9V_SMo1Vp7jcU73AH7dtMbOhGWGByvDZx0eWENJsZrei9wGQiSo4yLMtMb5FNtXzXMVAYJUiZdycUbd3MaqeK63y-X0JKC3bbwocFCiWdmjVwnmAPBp5xPt-yYBql"/>
+                <div class="absolute bottom-6 left-6 bg-surface/90 backdrop-blur-md p-6 max-w-xs border border-outline-variant/30">
+                    <span class="font-label-caps text-[10px] text-secondary block mb-2">ASSINATURA HARUYAMA</span>
+                    <h3 class="font-headline-sm text-headline-sm text-primary">Omakase Haru</h3>
+                    <p class="font-body-md text-body-md text-on-surface-variant mt-2">Nossa seleção mais prestigiada, harmonizada com o frescor da estação.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Item 1 -->
+        <div class="md:col-span-4 group">
+            <div class="border border-outline-variant/30 p-6 flex flex-col h-full bg-surface-container-low/50">
+                <div class="aspect-square overflow-hidden mb-6">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbKrQI5l3tRlGCL3vaFdolwyuaQqQbY3PlD_PaJf0qVaMf9aN3lHXo2vB8tHnCVv43pkC6FYWNxLUhHjBVJ_zoAi8t5-64tlJPmbGK4K1r9gv3EULjx8HKDox34vYL9eZ-xCjlj6uL40Lh82aTtZTupNoKH7k01bJJxFh5ROsU6ZOon9y32rGN5PdjHGevJHQ4XN3y9e92v40wCR5d8qFnn07phOEMwz19_n6LnqwCGWMfFh-ncorFziQdQoiQ9D5DWTSPni1TCp5i"/>
+                </div>
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-headline-sm text-headline-sm text-primary">Sake Nigiri</h3>
+                    <span class="font-label-caps text-label-caps text-primary">R$ 42</span>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant">Salmão premium, toque de yuzu e flor de sal das montanhas.</p>
+            </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="md:col-span-4 group">
+            <div class="border border-outline-variant/30 p-6 flex flex-col h-full bg-surface-container-low/50">
+                <div class="aspect-square overflow-hidden mb-6">
+                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqCxLLBW1x3Rzeq2x47VkoGzxNiHfhMnqtZ9mlTryn-6x9N7JU-rLZoCkr7wC8aeHy0W_Y6fYihjOiyYrqIAOzY_tCzfPZS9jnEGrmDAgvTizFpGpiompPxeL3dy2T5Ji_W_NZOOaCdgm-2hZsJVy6XE1xvqCSkANRUFYPAJnHME_CKhN0oxqh095f75fAeyZ01pEIDkD5G5ca0HA2ue5g2ofOOTxcSi8EhnXBOC3G6VBSZJljOu0V_Vuv1fXfbbBboD1w-MMs6JGe"/>
+                </div>
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-headline-sm text-headline-sm text-primary">Yama Shoyu</h3>
+                    <span class="font-label-caps text-label-caps text-primary">R$ 68</span>
+                </div>
+                <p class="font-body-md text-body-md text-on-surface-variant">Caldo reconfortante de longa cocção e shoyu envelhecido.</p>
+            </div>
+        </div>
+
+        <div class="md:col-span-8 group">
+            <div class="relative h-full border border-outline-variant/30 overflow-hidden min-h-[300px]">
+                <img class="w-full h-full object-cover grayscale-[0.3] group-hover:grayscale-0 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2Z6tqWX28DkNmx_wm5-xddbNwGwAucsA4pKGGb-ITuuOZZ8XudfIyXE3SYn-XvePKCVfjOObnvj04S6mPgKj9FHuppvlMMVfxLxP4PBtPu_eHO53Mu9_Q1_M2zYOXKRKN7ljh-n7KiG1aCnacAFae5KA3kzcCqDBWlWxejTuCRjUfoq6iKCbzkMIZgboJRpHaFYpshgNZtHEcSJQo_S0wrenVVV7jjyAaqT8Md04lvicQOLwwuc-PMcS6KCgAwCZsMyQ5JTfcF5-2"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex items-end p-12">
+                    <div>
+                        <span class="font-label-caps text-label-caps text-primary-fixed mb-4 block">DESTILADOS & CULTURA</span>
+                        <h3 class="font-display-lg text-headline-md md:text-display-lg text-white mb-4">Sake & Craft Spirits</h3>
+                        <button class="bg-surface text-primary px-8 py-3 font-label-caps text-label-caps hover:bg-primary hover:text-surface transition-colors border border-primary/20">EXPLORAR CARTA</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Menu Items -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12 mb-20">
+        <div class="border-b border-outline-variant/30 pb-8 flex justify-between items-end">
+            <div>
+                <h4 class="font-headline-sm text-headline-sm text-primary mb-1">Ebi Tempura</h4>
+                <p class="font-body-md text-body-md text-on-surface-variant">Camarões empanados em massa de arroz aerada.</p>
+            </div>
+            <span class="font-label-caps text-label-caps text-primary mb-1">R$ 54</span>
+        </div>
+        <div class="border-b border-outline-variant/30 pb-8 flex justify-between items-end">
+            <div>
+                <h4 class="font-headline-sm text-headline-sm text-primary mb-1">Maguro Tataki</h4>
+                <p class="font-body-md text-body-md text-on-surface-variant">Atum selado com crosta de gergelim e redução de ponzu.</p>
+            </div>
+            <span class="font-label-caps text-label-caps text-primary mb-1">R$ 58</span>
+        </div>
+        <div class="border-b border-outline-variant/30 pb-8 flex justify-between items-end">
+            <div>
+                <h4 class="font-headline-sm text-headline-sm text-primary mb-1">Nasuden</h4>
+                <p class="font-body-md text-body-md text-on-surface-variant">Beringela grelhada com missô artesanal Haruyama.</p>
+            </div>
+            <span class="font-label-caps text-label-caps text-primary mb-1">R$ 36</span>
+        </div>
+        <div class="border-b border-outline-variant/30 pb-8 flex justify-between items-end">
+            <div>
+                <h4 class="font-headline-sm text-headline-sm text-primary mb-1">Hotate Spicy</h4>
+                <p class="font-body-md text-body-md text-on-surface-variant">Vieiras grelhadas com aioli de togarashi e ovas.</p>
+            </div>
+            <span class="font-label-caps text-label-caps text-primary mb-1">R$ 72</span>
+        </div>
+    </div>
+</main>
+
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-t border-outline-variant/30 transition-all duration-300 ease-linear">
+    <div class="flex justify-around items-center h-20 px-margin-mobile w-full max-w-container-max mx-auto">
+        <a href="/" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">hourglass_empty</span>
+            <span class="font-label-caps text-label-caps">Fila</span>
+        </a>
+        <a href="/menu" class="flex flex-col items-center justify-center text-primary border-t-2 border-primary pt-2 transition-colors duration-300">
+            <span class="material-symbols-outlined">restaurant_menu</span>
+            <span class="font-label-caps text-label-caps">Menu</span>
+        </a>
+        <a href="/status" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">confirmation_number</span>
+            <span class="font-label-caps text-label-caps">Status</span>
+        </a>
+        <a href="/profile" class="flex flex-col items-center justify-center text-on-surface-variant pt-2 hover:text-primary transition-colors duration-300">
+            <span class="material-symbols-outlined">person</span>
+            <span class="font-label-caps text-label-caps">Perfil</span>
+        </a>
+    </div>
+</nav>
+
+<script>
+function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+}
+</script>
+</body>
+</html>

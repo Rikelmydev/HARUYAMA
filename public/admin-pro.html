@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html class="light" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Profissional | Haruyama Sushi</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Hanken+Grotesk:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D4037',
+                        'on-primary': '#FFFFFF',
+                        secondary: '#705C4E',
+                        surface: '#FAF7F2',
+                        'surface-container': '#F2EBE1',
+                        'surface-container-low': '#F8F1E9',
+                        'surface-container-highest': '#E6DDD2',
+                        'on-surface': '#2C241E',
+                        'on-surface-variant': '#5C524B',
+                        outline: '#A09384',
+                        'outline-variant': '#D0C4B8',
+                        'primary-container': '#E8E1D9',
+                        'secondary-container': '#EBDED2',
+                        error: '#B3261E',
+                        'error-container': '#F9DEDC',
+                        'on-error-container': '#410E0B',
+                        background: '#FAF7F2'
+                    },
+                    borderRadius: {
+                        DEFAULT: '0.25rem',
+                        lg: '0.5rem',
+                        xl: '0.75rem',
+                        full: '9999px'
+                    },
+                    spacing: {
+                        gutter: '24px',
+                        unit: '8px',
+                        'margin-desktop': '64px',
+                        'container-max': '1440px',
+                        'margin-mobile': '20px'
+                    },
+                    fontFamily: {
+                        'headline-md': ['EB Garamond'],
+                        'headline-sm': ['EB Garamond'],
+                        'label-caps': ['Hanken Grotesk'],
+                        'body-md': ['Hanken Grotesk']
+                    },
+                    fontSize: {
+                        'headline-md': ['32px', { lineHeight: '1.2', fontWeight: '400' }],
+                        'headline-sm': ['24px', { lineHeight: '1.3', fontWeight: '400' }],
+                        'label-caps': ['12px', { lineHeight: '1', letterSpacing: '0.12em', fontWeight: '600' }],
+                        'body-md': ['15px', { lineHeight: '1.55', fontWeight: '400' }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .admin-bg {
+            background:
+                radial-gradient(circle at top left, rgba(93, 64, 55, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(160, 147, 132, 0.12), transparent 24%),
+                linear-gradient(180deg, #fcfaf7 0%, #f6efe7 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface admin-bg">
+<div class="min-h-screen flex flex-col lg:flex-row">
+    <aside class="lg:w-80 bg-[#231915] text-white lg:sticky lg:top-0 lg:h-screen border-r border-white/10">
+        <div class="p-6 lg:p-8 border-b border-white/10">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <p class="font-label-caps text-[10px] tracking-[0.25em] text-white/50 uppercase">Painel operacional</p>
+                    <h1 class="font-headline-md text-3xl tracking-[0.18em] uppercase mt-2">Haruyama</h1>
+                </div>
+                <span class="material-symbols-outlined text-white/70">desk</span>
+            </div>
+            <div class="rounded-2xl bg-white/5 p-4 border border-white/10">
+                <p class="font-label-caps text-[10px] tracking-[0.2em] text-white/60 uppercase mb-1">Status do restaurante</p>
+                <div class="flex items-center justify-between gap-3">
+                    <span class="font-headline-sm">Operando</span>
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-200 text-[10px] font-label-caps uppercase tracking-[0.2em]">Ao vivo</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="p-4 lg:p-6 space-y-2">
+            <button class="admin-nav-item w-full text-left px-4 py-3 rounded-xl bg-white/10 border border-white/10" data-tab="dashboard">
+                <span class="material-symbols-outlined align-middle mr-3">dashboard</span> Dashboard
+            </button>
+            <button class="admin-nav-item w-full text-left px-4 py-3 rounded-xl text-white/80 hover:bg-white/5" data-tab="queue">
+                <span class="material-symbols-outlined align-middle mr-3">queue</span> Fila e clientes
+            </button>
+            <button class="admin-nav-item w-full text-left px-4 py-3 rounded-xl text-white/80 hover:bg-white/5" data-tab="tables">
+                <span class="material-symbols-outlined align-middle mr-3">table_restaurant</span> Mesas por tamanho
+            </button>
+            <button class="admin-nav-item w-full text-left px-4 py-3 rounded-xl text-white/80 hover:bg-white/5" data-tab="settings">
+                <span class="material-symbols-outlined align-middle mr-3">settings</span> Configurações
+            </button>
+        </nav>
+
+        <div class="p-6 lg:p-8 mt-auto border-t border-white/10 space-y-4">
+            <div>
+                <p class="font-label-caps text-[10px] tracking-[0.2em] uppercase text-white/50 mb-2">Relógio</p>
+                <p id="liveTime" class="font-headline-sm">--:--:--</p>
+            </div>
+            <div>
+                <p class="font-label-caps text-[10px] tracking-[0.2em] uppercase text-white/50 mb-2">Conexão</p>
+                <p id="connectionState" class="text-sm text-white/80">Aguardando conexão</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1">
+        <header class="sticky top-0 z-20 bg-surface/85 backdrop-blur-xl border-b border-outline-variant/40">
+            <div class="px-margin-mobile lg:px-margin-desktop py-4 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 max-w-[1440px] mx-auto">
+                <div>
+                    <p class="font-label-caps text-[10px] tracking-[0.25em] uppercase text-secondary">Gestão da fila, mesas e atendimento</p>
+                    <h2 class="font-headline-md text-2xl text-primary mt-1" id="pageTitle">Dashboard</h2>
+                </div>
+                <div class="flex flex-col md:flex-row gap-3 md:items-center w-full xl:w-auto">
+                    <div class="relative w-full md:w-80">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+                        <input id="searchInput" class="w-full pl-10 pr-4 py-3 bg-surface border border-outline-variant/60 rounded-xl focus:outline-none focus:border-primary" placeholder="Buscar por nome, CPF, telefone ou número" type="search"/>
+                    </div>
+                    <button class="px-4 py-3 rounded-xl bg-primary text-on-primary font-label-caps text-[11px] tracking-[0.18em] uppercase" onclick="refreshData()">Atualizar</button>
+                </div>
+            </div>
+        </header>
+
+        <section class="px-margin-mobile lg:px-margin-desktop py-8 max-w-[1440px] mx-auto space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-6 gap-4">
+                <div class="p-5 rounded-2xl bg-surface border border-outline-variant/40 shadow-sm">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2">Na fila</p>
+                    <p class="font-headline-md text-primary text-3xl" id="statWaiting">0</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-surface border border-outline-variant/40 shadow-sm">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2">Mesas ocupadas</p>
+                    <p class="font-headline-md text-primary text-3xl"><span id="statOccupied">0</span>/<span id="statTotalTables">15</span></p>
+                </div>
+                <div class="p-5 rounded-2xl bg-surface border border-outline-variant/40 shadow-sm">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2">Casal</p>
+                    <p class="font-headline-md text-primary text-3xl"><span id="statCouple">0</span></p>
+                </div>
+                <div class="p-5 rounded-2xl bg-surface border border-outline-variant/40 shadow-sm">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2">Média</p>
+                    <p class="font-headline-md text-primary text-3xl"><span id="statMedium">0</span></p>
+                </div>
+                <div class="p-5 rounded-2xl bg-surface border border-outline-variant/40 shadow-sm">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2">Família</p>
+                    <p class="font-headline-md text-primary text-3xl"><span id="statFamily">0</span></p>
+                </div>
+                <div class="p-5 rounded-2xl bg-surface border border-outline-variant/40 shadow-sm">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2">Atendidos hoje</p>
+                    <p class="font-headline-md text-primary text-3xl" id="statServed">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <div id="dashboardTab" class="space-y-6">
+                    <div class="p-6 md:p-7 bg-surface border border-outline-variant/40 rounded-2xl shadow-sm">
+                        <div class="flex items-start justify-between gap-4 mb-6">
+                            <div>
+                                <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em]">Fila prioritária</p>
+                                <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Clientes aguardando mesa</h3>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-label-caps uppercase tracking-[0.18em]" id="queueCountPill">0 na fila</span>
+                        </div>
+                        <div id="queueList" class="space-y-3 min-h-[220px]"></div>
+                    </div>
+
+                    <div class="p-6 md:p-7 bg-surface border border-outline-variant/40 rounded-2xl shadow-sm">
+                        <div class="flex items-start justify-between gap-4 mb-6">
+                            <div>
+                                <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em]">Atendimento atual</p>
+                                <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Mesa em operação</h3>
+                            </div>
+                        </div>
+                        <div id="currentServiceCard" class="p-5 bg-primary-container/70 border border-outline-variant/40 rounded-2xl text-center text-on-primary-container">
+                            Nenhuma mesa sendo atendida agora.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tablesTab" class="space-y-6">
+                    <div class="p-6 md:p-7 bg-surface border border-outline-variant/40 rounded-2xl shadow-sm">
+                        <div class="flex items-start justify-between gap-4 mb-6">
+                            <div>
+                                <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em]">Mesa por tamanho</p>
+                                <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Casal, média e família</h3>
+                            </div>
+                            <div class="text-right text-sm text-on-surface-variant">
+                                <p>Toque em uma mesa livre para chamar o próximo da fila.</p>
+                            </div>
+                        </div>
+                        <div id="tablesBoard" class="space-y-6"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="queueTab" class="hidden grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div class="xl:col-span-2 p-6 md:p-7 bg-surface border border-outline-variant/40 rounded-2xl shadow-sm">
+                    <div class="flex items-start justify-between gap-4 mb-6">
+                        <div>
+                            <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em]">Lista detalhada</p>
+                            <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Clientes e identificação</h3>
+                        </div>
+                        <span class="text-sm text-on-surface-variant">Nome, CPF, telefone e tamanho do grupo</span>
+                    </div>
+                    <div id="queueTableList" class="space-y-3"></div>
+                </div>
+
+                <div class="p-6 md:p-7 bg-surface border border-outline-variant/40 rounded-2xl shadow-sm space-y-4">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em]">Ações rápidas</p>
+                    <button class="w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-caps text-[11px] tracking-[0.18em] uppercase" onclick="callNextBest()">Chamar próximo compatível</button>
+                    <button class="w-full px-4 py-3 rounded-xl border border-outline-variant text-primary font-label-caps text-[11px] tracking-[0.18em] uppercase" onclick="releaseAllVisible()">Liberar mesas selecionadas</button>
+                    <div class="pt-4 border-t border-outline-variant/40 space-y-2 text-sm text-on-surface-variant">
+                        <p>Organização por CPF evita duplicidade por mesa.</p>
+                        <p>Mesas casal atendem até 2 pessoas, média até 4 e família até 6.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="settingsTab" class="hidden p-6 md:p-7 bg-surface border border-outline-variant/40 rounded-2xl shadow-sm max-w-3xl">
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-4">Configurações do restaurante</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="block">
+                        <span class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2 block">Capacidade total</span>
+                        <input id="totalTablesInput" type="number" class="w-full px-4 py-3 border border-outline-variant rounded-xl bg-surface-container-low" min="1" max="50"/>
+                    </label>
+                    <label class="block">
+                        <span class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-2 block">Tempo médio</span>
+                        <input id="avgWaitInput" type="number" class="w-full px-4 py-3 border border-outline-variant rounded-xl bg-surface-container-low" min="5" max="120"/>
+                    </label>
+                </div>
+                <div class="mt-4 flex gap-3">
+                    <button class="px-5 py-3 rounded-xl bg-primary text-on-primary font-label-caps text-[11px] tracking-[0.18em] uppercase" onclick="saveSettings()">Salvar</button>
+                    <button class="px-5 py-3 rounded-xl border border-outline-variant text-primary font-label-caps text-[11px] tracking-[0.18em] uppercase" onclick="refreshData()">Recarregar</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div id="toast" class="fixed bottom-5 right-5 hidden max-w-md px-4 py-3 rounded-2xl shadow-2xl border text-sm"></div>
+
+<script>
+const socket = window.io ? io(window.location.origin, { transports: ['websocket', 'polling'] }) : null;
+let currentData = null;
+let activeTab = 'dashboard';
+
+const tabElements = {
+    dashboard: document.getElementById('dashboardTab'),
+    queue: document.getElementById('queueTab'),
+    tables: document.getElementById('tablesTab'),
+    settings: document.getElementById('settingsTab')
+};
+
+function showToast(message, variant = 'info') {
+    const toast = document.getElementById('toast');
+    const styles = {
+        info: 'bg-surface border-outline-variant text-on-surface',
+        success: 'bg-emerald-600 border-emerald-700 text-white',
+        error: 'bg-error-container border-error/40 text-on-error-container'
+    };
+    toast.className = `fixed bottom-5 right-5 max-w-md px-4 py-3 rounded-2xl shadow-2xl border text-sm ${styles[variant] || styles.info}`;
+    toast.textContent = message;
+    toast.classList.remove('hidden');
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => toast.classList.add('hidden'), 2800);
+}
+
+function formatCpf(value) {
+    const digits = String(value || '').replace(/\D/g, '');
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
+    if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
+    return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`;
+}
+
+function formatPhone(value) {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
+}
+
+function formatShortTime(value) {
+    return value ? new Date(value).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--';
+}
+
+function setActiveTab(tab) {
+    activeTab = tab;
+    Object.entries(tabElements).forEach(([name, element]) => {
+        element.classList.toggle('hidden', name !== tab);
+    });
+    document.getElementById('pageTitle').textContent = {
+        dashboard: 'Dashboard',
+        queue: 'Fila e clientes',
+        tables: 'Mesas por tamanho',
+        settings: 'Configurações'
+    }[tab];
+
+    document.querySelectorAll('.admin-nav-item').forEach((button) => {
+        const selected = button.dataset.tab === tab;
+        button.classList.toggle('bg-white/10', selected);
+        button.classList.toggle('border-white/10', selected);
+        button.classList.toggle('text-white', selected);
+        button.classList.toggle('text-white/80', !selected);
+    });
+}
+
+function getFilteredQueue() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    if (!currentData) return [];
+    return currentData.queue.filter((item) => {
+        const haystack = [item.name, item.cpf, item.phone, String(item.number), String(item.guests)].join(' ').toLowerCase();
+        return haystack.includes(query);
+    });
+}
+
+function customerTableHint(guests) {
+    if (guests <= 2) return 'casal';
+    if (guests <= 4) return 'medio';
+    return 'familia';
+}
+
+function renderDashboard(data) {
+    document.getElementById('statWaiting').textContent = data.queue.length;
+    document.getElementById('statOccupied').textContent = data.occupiedTables;
+    document.getElementById('statTotalTables').textContent = data.tables;
+    document.getElementById('statServed').textContent = data.servedToday || 0;
+
+    const coupleOccupied = data.tableLayout.filter((table) => table.type === 'casal' && table.status === 'occupied').length;
+    const mediumOccupied = data.tableLayout.filter((table) => table.type === 'medio' && table.status === 'occupied').length;
+    const familyOccupied = data.tableLayout.filter((table) => table.type === 'familia' && table.status === 'occupied').length;
+
+    document.getElementById('statCouple').textContent = coupleOccupied;
+    document.getElementById('statMedium').textContent = mediumOccupied;
+    document.getElementById('statFamily').textContent = familyOccupied;
+    document.getElementById('queueCountPill').textContent = `${data.queue.length} na fila`;
+
+    const currentServiceCard = document.getElementById('currentServiceCard');
+    if (data.currentServing) {
+        currentServiceCard.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                <div class="p-4 rounded-2xl bg-white border border-outline-variant/40">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">Cliente</p>
+                    <p class="font-headline-sm text-primary">${data.currentServing.name}</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white border border-outline-variant/40">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">Mesa</p>
+                    <p class="font-headline-sm text-primary">${data.currentServing.tableId || '--'}</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-white border border-outline-variant/40">
+                    <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">CPF</p>
+                    <p class="font-headline-sm text-primary">${formatCpf(data.currentServing.cpf)}</p>
+                </div>
+            </div>
+        `;
+    } else {
+        currentServiceCard.textContent = 'Nenhuma mesa sendo atendida agora.';
+    }
+}
+
+function renderQueue(data) {
+    const filtered = getFilteredQueue();
+    const queueList = document.getElementById('queueList');
+    const queueTableList = document.getElementById('queueTableList');
+
+    if (!filtered.length) {
+        const empty = '<div class="p-5 rounded-2xl border border-dashed border-outline-variant text-on-surface-variant">Nenhum cliente encontrado.</div>';
+        queueList.innerHTML = empty;
+        queueTableList.innerHTML = empty;
+        return;
+    }
+
+    queueList.innerHTML = filtered.slice(0, 6).map((customer) => `
+        <article class="p-4 rounded-2xl border border-outline-variant/40 bg-surface-container-low flex flex-col gap-3">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="font-headline-sm text-primary">#${customer.number} - ${customer.name}</p>
+                    <p class="text-sm text-on-surface-variant mt-1">${formatPhone(customer.phone)} · ${formatCpf(customer.cpf)}</p>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-label-caps uppercase tracking-[0.18em]">${customer.position}º</span>
+            </div>
+            <div class="flex flex-wrap gap-2 text-xs text-on-surface-variant">
+                <span class="px-2 py-1 rounded-full bg-white border border-outline-variant/40">${customer.guests} convidado(s)</span>
+                <span class="px-2 py-1 rounded-full bg-white border border-outline-variant/40">Mesa sugerida: ${customerTableHint(customer.guests)}</span>
+            </div>
+        </article>
+    `).join('');
+
+    queueTableList.innerHTML = filtered.map((customer) => `
+        <article class="p-5 rounded-2xl border border-outline-variant/40 bg-surface-container-low flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <h4 class="font-headline-sm text-primary">#${customer.number} ${customer.name}</h4>
+                    <span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-label-caps uppercase tracking-[0.18em]">${customer.position}º da fila</span>
+                </div>
+                <p class="text-sm text-on-surface-variant mt-2">CPF ${formatCpf(customer.cpf)} · Telefone ${formatPhone(customer.phone)} · ${customer.guests} pessoa(s)</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <button class="px-4 py-2 rounded-xl bg-primary text-on-primary text-[11px] font-label-caps uppercase tracking-[0.18em]" onclick="callNextBest()">Enviar para mesa</button>
+            </div>
+        </article>
+    `).join('');
+}
+
+function renderTables(data) {
+    const groups = [
+        { key: 'casal', title: 'Mesas casal', color: 'bg-amber-50' },
+        { key: 'medio', title: 'Mesas média', color: 'bg-stone-50' },
+        { key: 'familia', title: 'Mesas família', color: 'bg-rose-50' }
+    ];
+
+    document.getElementById('tablesBoard').innerHTML = groups.map((group) => {
+        const tables = data.tableLayout.filter((table) => table.type === group.key);
+        return `
+            <section class="space-y-3">
+                <div class="flex items-center justify-between gap-4">
+                    <div>
+                        <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em]">${group.title}</p>
+                        <h4 class="font-headline-sm text-primary">${tables.length} mesas</h4>
+                    </div>
+                    <span class="text-sm text-on-surface-variant">Capacidade até ${Math.max(...tables.map((table) => table.capacity))} pessoas</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    ${tables.map(renderTableCard).join('')}
+                </div>
+            </section>
+        `;
+    }).join('');
+}
+
+function renderTableCard(table) {
+    const occupied = table.status === 'occupied';
+    return `
+        <article class="p-4 rounded-2xl border ${occupied ? 'border-primary/30 bg-primary-container/60' : 'border-outline-variant/40 bg-white'} shadow-sm">
+            <div class="flex items-start justify-between gap-3 mb-4">
+                <div>
+                    <p class="font-label-caps text-[10px] uppercase tracking-[0.2em] text-secondary">${table.label}</p>
+                    <h5 class="font-headline-sm text-primary mt-1">${table.id}</h5>
+                </div>
+                <span class="px-3 py-1 rounded-full text-[10px] font-label-caps uppercase tracking-[0.18em] ${occupied ? 'bg-primary text-on-primary' : 'bg-emerald-600 text-white'}">${occupied ? 'Ocupada' : 'Livre'}</span>
+            </div>
+
+            <div class="space-y-2 text-sm text-on-surface-variant">
+                <p>Capacidade: ${table.capacity} pessoas</p>
+                <p>Tipo: ${table.type === 'casal' ? 'Casal' : table.type === 'medio' ? 'Média' : 'Família'}</p>
+                ${occupied && table.customer ? `<p>Cliente: ${table.customer.name}</p><p>Fila: #${table.customer.number}</p><p>CPF: ${formatCpf(table.customer.cpf)}</p><p>Telefone: ${formatPhone(table.customer.phone)}</p>` : '<p>Mesa pronta para chamar o próximo cliente compatível.</p>'}
+            </div>
+
+            <div class="mt-4 flex flex-wrap gap-2">
+                ${occupied ? `
+                    <button class="px-3 py-2 rounded-xl bg-emerald-600 text-white text-[11px] font-label-caps uppercase tracking-[0.18em]" onclick="completeService('${table.id}')">Concluir</button>
+                    <button class="px-3 py-2 rounded-xl border border-outline-variant text-primary text-[11px] font-label-caps uppercase tracking-[0.18em]" onclick="freeTable('${table.id}')">Liberar</button>
+                ` : `
+                    <button class="px-3 py-2 rounded-xl bg-primary text-on-primary text-[11px] font-label-caps uppercase tracking-[0.18em]" onclick="callNext('${table.id}')">Chamar próximo</button>
+                `}
+            </div>
+        </article>
+    `;
+}
+
+function updateScreen(data) {
+    currentData = data;
+    document.getElementById('statTotalTables').textContent = data.tables;
+    document.getElementById('totalTablesInput').value = data.tables;
+    document.getElementById('avgWaitInput').value = data.averageWaitTime || 25;
+    renderDashboard(data);
+    renderQueue(data);
+    renderTables(data);
+}
+
+function callNext(tableId) {
+    socket?.emit('call-next', { tableId });
+}
+
+function callNextBest() {
+    if (!currentData || !currentData.queue.length) {
+        showToast('Não há clientes na fila.', 'error');
+        return;
+    }
+    const nextCustomer = currentData.queue[0];
+    const targetTable = currentData.tableLayout.find((table) => table.status === 'free' && table.capacity >= nextCustomer.guests);
+    socket?.emit('call-next', { tableId: targetTable?.id, guests: nextCustomer.guests });
+}
+
+function completeService(tableId) {
+    socket?.emit('complete-service', { tableId });
+}
+
+function freeTable(tableId) {
+    socket?.emit('free-table', { tableId });
+}
+
+function releaseAllVisible() {
+    if (!currentData) return;
+    currentData.tableLayout.filter((table) => table.status === 'occupied').forEach((table) => freeTable(table.id));
+}
+
+function saveSettings() {
+    showToast('Configurações locais salvas na interface. Para persistência total, conecte ao backend.', 'info');
+}
+
+function refreshData() {
+    fetch('/api/queue')
+        .then((response) => response.json())
+        .then(updateScreen)
+        .catch(() => showToast('Não foi possível atualizar os dados.', 'error'));
+}
+
+document.querySelectorAll('.admin-nav-item').forEach((button) => {
+    button.addEventListener('click', () => setActiveTab(button.dataset.tab));
+});
+
+document.getElementById('searchInput').addEventListener('input', () => {
+    if (currentData) {
+        renderQueue(currentData);
+    }
+});
+
+document.getElementById('searchInput').addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        event.target.value = '';
+        renderQueue(currentData);
+    }
+});
+
+socket?.on('connect', () => {
+    document.getElementById('connectionState').textContent = 'Conectado ao servidor em tempo real';
+    showToast('Admin conectado ao servidor', 'success');
+});
+
+socket?.on('disconnect', () => {
+    document.getElementById('connectionState').textContent = 'Conexão perdida';
+    showToast('Conexão com o servidor perdida.', 'error');
+});
+
+socket?.on('queue-error', (payload) => {
+    showToast(payload.message || 'Operação não concluída.', 'error');
+});
+
+socket?.on('queue-update', updateScreen);
+
+function loadInitialData() {
+    fetch('/api/queue')
+        .then((response) => response.json())
+        .then((data) => {
+            updateScreen(data);
+            setActiveTab('dashboard');
+        })
+        .catch(() => showToast('Não foi possível carregar os dados iniciais.', 'error'));
+}
+
+function updateClock() {
+    document.getElementById('liveTime').textContent = new Date().toLocaleTimeString('pt-BR');
+}
+setInterval(updateClock, 1000);
+updateClock();
+loadInitialData();
+</script>
+</body>
+</html>
