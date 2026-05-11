@@ -1,23 +1,23 @@
 {
   "queue": [],
   "currentServing": {
-    "id": "1778528642594-_tax81dlv-dWzaj3AAAR",
-    "socketId": "_tax81dlv-dWzaj3AAAR",
-    "number": 11,
-    "name": "dssddsddddd",
-    "phone": "23443424444",
-    "cpf": "44444444433",
-    "guests": 5,
-    "createdAt": "2026-05-11T19:44:02.594Z",
+    "id": "1778530849082-pedGpdj1SffJGjmvAAAH",
+    "socketId": "pedGpdj1SffJGjmvAAAH",
+    "number": 14,
+    "name": "yan",
+    "cpf": "40370537801",
+    "phone": "11962094581",
+    "guests": 3,
+    "createdAt": "2026-05-11T20:20:49.083Z",
     "status": "seated",
     "position": 1,
-    "tableId": "F03",
-    "tableType": "familia",
-    "seatedAt": "2026-05-11T19:45:09.346Z"
+    "tableId": "M01",
+    "tableType": "medio",
+    "seatedAt": "2026-05-11T20:21:01.751Z"
   },
-  "nextNumber": 12,
+  "nextNumber": 15,
   "tables": 15,
-  "occupiedTables": 6,
+  "occupiedTables": 1,
   "averageWaitTime": 25,
   "tableLayout": [
     {
@@ -65,8 +65,22 @@
       "type": "medio",
       "label": "Mesa Média 01",
       "capacity": 4,
-      "status": "free",
-      "customer": null
+      "status": "occupied",
+      "customer": {
+        "id": "1778530849082-pedGpdj1SffJGjmvAAAH",
+        "socketId": "pedGpdj1SffJGjmvAAAH",
+        "number": 14,
+        "name": "yan",
+        "cpf": "40370537801",
+        "phone": "11962094581",
+        "guests": 3,
+        "createdAt": "2026-05-11T20:20:49.083Z",
+        "status": "seated",
+        "position": 1,
+        "tableId": "M01",
+        "tableType": "medio",
+        "seatedAt": "2026-05-11T20:21:01.751Z"
+      }
     },
     {
       "id": "M02",
@@ -81,132 +95,48 @@
       "type": "medio",
       "label": "Mesa Média 03",
       "capacity": 4,
-      "status": "occupied",
-      "customer": {
-        "id": "1778528584549-_tax81dlv-dWzaj3AAAR",
-        "socketId": "_tax81dlv-dWzaj3AAAR",
-        "number": 6,
-        "name": "Isaac Lemos",
-        "phone": "11934345534",
-        "cpf": "40323433244",
-        "guests": 4,
-        "createdAt": "2026-05-11T19:43:04.549Z",
-        "status": "seated",
-        "position": 1,
-        "tableId": "M03",
-        "tableType": "medio",
-        "seatedAt": "2026-05-11T19:45:06.458Z"
-      }
+      "status": "free",
+      "customer": null
     },
     {
       "id": "M04",
       "type": "medio",
       "label": "Mesa Média 04",
       "capacity": 4,
-      "status": "occupied",
-      "customer": {
-        "id": "1778528591986-_tax81dlv-dWzaj3AAAR",
-        "socketId": "_tax81dlv-dWzaj3AAAR",
-        "number": 7,
-        "name": "dsadsa",
-        "phone": "43243432432",
-        "cpf": "23123434243",
-        "guests": 4,
-        "createdAt": "2026-05-11T19:43:11.986Z",
-        "status": "seated",
-        "position": 1,
-        "tableId": "M04",
-        "tableType": "medio",
-        "seatedAt": "2026-05-11T19:45:07.297Z"
-      }
+      "status": "free",
+      "customer": null
     },
     {
       "id": "M05",
       "type": "medio",
       "label": "Mesa Média 05",
       "capacity": 4,
-      "status": "occupied",
-      "customer": {
-        "id": "1778528601900-_tax81dlv-dWzaj3AAAR",
-        "socketId": "_tax81dlv-dWzaj3AAAR",
-        "number": 8,
-        "name": "sadsdsa",
-        "phone": "43243432321",
-        "cpf": "23134433333",
-        "guests": 4,
-        "createdAt": "2026-05-11T19:43:21.900Z",
-        "status": "seated",
-        "position": 1,
-        "tableId": "M05",
-        "tableType": "medio",
-        "seatedAt": "2026-05-11T19:45:07.921Z"
-      }
+      "status": "free",
+      "customer": null
     },
     {
       "id": "F01",
       "type": "familia",
       "label": "Mesa Família 01",
       "capacity": 6,
-      "status": "occupied",
-      "customer": {
-        "id": "1778528611768-_tax81dlv-dWzaj3AAAR",
-        "socketId": "_tax81dlv-dWzaj3AAAR",
-        "number": 9,
-        "name": "dsds3234344",
-        "phone": "23443435555",
-        "cpf": "43234433443",
-        "guests": 5,
-        "createdAt": "2026-05-11T19:43:31.768Z",
-        "status": "seated",
-        "position": 1,
-        "tableId": "F01",
-        "tableType": "familia",
-        "seatedAt": "2026-05-11T19:45:08.372Z"
-      }
+      "status": "free",
+      "customer": null
     },
     {
       "id": "F02",
       "type": "familia",
       "label": "Mesa Família 02",
       "capacity": 6,
-      "status": "occupied",
-      "customer": {
-        "id": "1778528624623-_tax81dlv-dWzaj3AAAR",
-        "socketId": "_tax81dlv-dWzaj3AAAR",
-        "number": 10,
-        "name": "dssdds",
-        "phone": "23443433333",
-        "cpf": "44444444444",
-        "guests": 5,
-        "createdAt": "2026-05-11T19:43:44.623Z",
-        "status": "seated",
-        "position": 1,
-        "tableId": "F02",
-        "tableType": "familia",
-        "seatedAt": "2026-05-11T19:45:08.810Z"
-      }
+      "status": "free",
+      "customer": null
     },
     {
       "id": "F03",
       "type": "familia",
       "label": "Mesa Família 03",
       "capacity": 6,
-      "status": "occupied",
-      "customer": {
-        "id": "1778528642594-_tax81dlv-dWzaj3AAAR",
-        "socketId": "_tax81dlv-dWzaj3AAAR",
-        "number": 11,
-        "name": "dssddsddddd",
-        "phone": "23443424444",
-        "cpf": "44444444433",
-        "guests": 5,
-        "createdAt": "2026-05-11T19:44:02.594Z",
-        "status": "seated",
-        "position": 1,
-        "tableId": "F03",
-        "tableType": "familia",
-        "seatedAt": "2026-05-11T19:45:09.346Z"
-      }
+      "status": "free",
+      "customer": null
     },
     {
       "id": "F04",
@@ -225,5 +155,22 @@
       "customer": null
     }
   ],
-  "servedToday": 9
+  "servedToday": 12,
+  "registrations": [
+    {
+      "cpf": "40370537807",
+      "phone": "11962094589",
+      "createdAt": "2026-05-11T20:15:46.560Z"
+    },
+    {
+      "cpf": "40370537803",
+      "phone": "11962094584",
+      "createdAt": "2026-05-11T20:16:37.046Z"
+    },
+    {
+      "cpf": "40370537801",
+      "phone": "11962094581",
+      "createdAt": "2026-05-11T20:20:49.083Z"
+    }
+  ]
 }

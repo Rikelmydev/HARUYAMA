@@ -75,6 +75,12 @@ function formatPhone(value) {
   return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`;
 }
 
+function isSameDay(dateA, dateB) {
+  const a = new Date(dateA);
+  const b = new Date(dateB);
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
 function createInitialState() {
   return {
     queue: [],
@@ -84,8 +90,14 @@ function createInitialState() {
     tableLayout: createInitialTableState(),
     occupiedTables: 0,
     averageWaitTime: 25,
-    servedToday: 0
+    servedToday: 0,
+    registrations: []
   };
+}
+
+function purgeOldRegistrations() {
+  const today = new Date().toISOString();
+  queueData.registrations = (queueData.registrations || []).filter((item) => isSameDay(item.createdAt, today));
 }
 
 // Garantir que a pasta de dados existe
@@ -136,6 +148,12 @@ function syncDerivedState() {
   queueData.nextNumber = Number(queueData.nextNumber) || 1;
   queueData.averageWaitTime = Number(queueData.averageWaitTime) || 25;
   queueData.servedToday = Number(queueData.servedToday) || 0;
+  queueData.registrations = Array.isArray(queueData.registrations) ? queueData.registrations.map((registration) => ({
+    cpf: normalizeCpf(registration.cpf),
+    phone: normalizePhone(registration.phone),
+    createdAt: registration.createdAt || new Date().toISOString()
+  })) : [];
+  purgeOldRegistrations();
   recalculateQueuePositions();
   recalculateOccupiedTables();
 }
@@ -156,7 +174,16 @@ function findDuplicateCustomer(cpf, phone) {
   }
 
   const tableMatch = queueData.tableLayout.find((table) => table.customer && (table.customer.cpf === normalizedCpf || table.customer.phone === normalizedPhone));
-  return tableMatch ? tableMatch.customer : null;
+  if (tableMatch) {
+    return tableMatch.customer;
+  }
+
+  const registrationMatch = (queueData.registrations || []).find((registration) =>
+    (registration.cpf === normalizedCpf || registration.phone === normalizedPhone) &&
+    isSameDay(registration.createdAt, new Date().toISOString())
+  );
+
+  return registrationMatch || null;
 }
 
 function findTableById(tableId) {
@@ -267,19 +294,20 @@ io.on('connection', (socket) => {
   socket.on('add-to-queue', (data) => {
     const name = String(data.name || '').trim();
     const cpf = normalizeCpf(data.cpf);
+    const phone = normalizePhone(data.phone);
     const guests = Math.min(Math.max(Number(data.guests) || 1, 1), 10);
 
-    if (!name || cpf.length !== 11) {
+    if (!name || cpf.length !== 11 || (phone.length !== 10 && phone.length !== 11)) {
       socket.emit('queue-error', {
-        message: 'Preencha nome e CPF válidos para entrar na fila.'
+        message: 'Preencha nome, CPF e telefone válidos para entrar na fila.'
       });
       return;
     }
 
-    const duplicateCustomer = findDuplicateCustomer(cpf, '');
+    const duplicateCustomer = findDuplicateCustomer(cpf, phone);
     if (duplicateCustomer) {
       socket.emit('queue-error', {
-        message: 'Já existe um cadastro ativo com este CPF.'
+        message: 'Já existe um cadastro ativo ou recente com este CPF ou telefone.'
       });
       return;
     }
@@ -290,6 +318,7 @@ io.on('connection', (socket) => {
       number: queueData.nextNumber,
       name,
       cpf,
+      phone,
       guests,
       createdAt: new Date().toISOString(),
       status: 'waiting',
@@ -297,6 +326,7 @@ io.on('connection', (socket) => {
     };
 
     queueData.queue.push(newEntry);
+    queueData.registrations.push({ cpf, phone, createdAt: newEntry.createdAt });
     queueData.nextNumber++;
     socket.join(customerRoom(cpf));
     persistAndBroadcast();

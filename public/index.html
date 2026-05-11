@@ -168,8 +168,6 @@
 <!-- Menu Mobile -->
 <div id="mobileMenu" class="fixed top-16 left-0 right-0 bg-surface z-40 border-b border-outline-variant/30 hidden">
     <nav class="flex flex-col p-4 gap-2">
-        <a href="/" class="p-3 rounded hover:bg-primary-container transition-colors">Entrada na Fila</a>
-        <a href="/menu" class="p-3 rounded hover:bg-primary-container transition-colors">Cardápio</a>
         <a href="/admin" class="p-3 rounded hover:bg-primary-container transition-colors">Admin</a>
     </nav>
 </div>
@@ -194,6 +192,11 @@
                 <div>
                     <label class="font-label-caps text-label-caps text-secondary mb-2 block uppercase tracking-widest" for="name">Nome Completo</label>
                     <input class="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors font-body-md text-body-md placeholder:text-outline-variant/60" id="name" name="name" placeholder="Ex: Hiroshi Tanaka" type="text" required/>
+                </div>
+
+                <div>
+                    <label class="font-label-caps text-label-caps text-secondary mb-2 block uppercase tracking-widest" for="phone">Telefone</label>
+                    <input class="w-full bg-transparent border-b border-outline-variant py-3 focus:outline-none focus:border-primary transition-colors font-body-md text-body-md placeholder:text-outline-variant/60" id="phone" name="phone" placeholder="(00) 00000-0000" type="tel" inputmode="tel" maxlength="15" required/>
                 </div>
 
                 <div>
@@ -247,7 +250,7 @@
                     <p id="customerMetaDisplay" class="font-body-md text-on-surface-variant mt-3">Quando sua vez chegar, o número e o CPF do cliente vão aparecer aqui.</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 mt-5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5">
                     <div class="p-4 bg-primary-container/70 border border-outline-variant/30">
                         <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">Número</p>
                         <p class="font-display-lg-mobile text-primary" id="queueNumber">--</p>
@@ -256,6 +259,10 @@
                         <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">CPF</p>
                         <p class="font-headline-sm text-primary" id="queueCpf">--</p>
                     </div>
+                    <div class="p-4 bg-primary-container/70 border border-outline-variant/30">
+                        <p class="font-label-caps text-[10px] text-secondary uppercase tracking-[0.2em] mb-1">Telefone</p>
+                        <p class="font-headline-sm text-primary" id="queuePhone">--</p>
+                    </div>
                 </div>
             </div>
 
@@ -263,17 +270,28 @@
                 <div class="flex items-center justify-between mb-5">
                     <div>
                         <p class="font-label-caps text-label-caps text-secondary uppercase tracking-[0.22em]">Fila ao vivo</p>
-                        <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Apenas sua identificação</h3>
+                        <h3 class="font-headline-sm text-headline-sm text-primary mt-1">Apenas nomes da fila</h3>
                     </div>
                     <span class="text-sm text-on-surface-variant" id="queueCount">Privado</span>
                 </div>
-                <div class="p-4 border border-dashed border-outline-variant/50 text-on-surface-variant font-body-md">
-                    A lista de outros clientes não é exibida nesta tela.
+                <div id="liveQueueList" class="space-y-2 p-4 border border-dashed border-outline-variant/50 text-on-surface-variant font-body-md">
+                    <p class="text-on-surface-variant">Carregando nomes...</p>
                 </div>
             </div>
         </aside>
     </div>
 </main>
+
+<div id="notificationAlert" class="fixed inset-x-4 top-24 z-50 hidden items-center justify-between gap-4 rounded-2xl border border-primary bg-primary/10 p-4 text-primary shadow-2xl backdrop-blur-sm md:left-auto md:right-6 md:w-[360px]">
+    <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-3xl">notifications_active</span>
+        <div>
+            <p class="font-semibold">Sua mesa está pronta</p>
+            <p id="notificationAlertText" class="text-sm text-on-surface-variant">Dirija-se à mesa agora.</p>
+        </div>
+    </div>
+    <button class="font-semibold text-primary hover:underline" onclick="hideNotificationAlert()">Fechar</button>
+</div>
 
 <script>
 const socket = window.io ? io(window.location.origin, {
@@ -284,6 +302,7 @@ const customerState = {
     number: null,
     name: '',
     cpf: '',
+    phone: '',
     guests: 2,
     tableId: null
 };
@@ -305,6 +324,14 @@ function formatCpf(value) {
     if (digits.length <= 6) return `${digits.slice(0, 3)}.${digits.slice(3)}`;
     if (digits.length <= 9) return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6)}`;
     return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9, 11)}`;
+}
+
+function formatPhone(value) {
+    const digits = String(value || '').replace(/\D/g, '').slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    if (digits.length <= 10) return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
 }
 
 function setStatusBadge(text, variant = 'waiting') {
@@ -347,6 +374,24 @@ function getCurrentEntry(data) {
     return tableMatch ? { ...tableMatch.customer, tableLabel: tableMatch.label } : null;
 }
 
+function renderLiveQueue(data) {
+    const list = document.getElementById('liveQueueList');
+    const count = data.queue ? data.queue.length : 0;
+    const title = document.getElementById('queueCount');
+    title.textContent = count > 0 ? `${count} cliente${count > 1 ? 's' : ''}` : 'Privado';
+
+    if (!data.queue || data.queue.length === 0) {
+        list.innerHTML = '<p class="text-on-surface-variant">Nenhum cliente aguardando no momento.</p>';
+        return;
+    }
+
+    list.innerHTML = data.queue.map((item, index) => `
+        <div class="rounded border border-outline-variant/20 bg-white/80 p-3 text-on-surface">
+            <span class="font-semibold">${index + 1}. ${item.name}</span>
+        </div>
+    `).join('');
+}
+
 function renderCustomerStatus(data) {
     const current = getCurrentEntry(data);
     if (!current) {
@@ -354,6 +399,7 @@ function renderCustomerStatus(data) {
         document.getElementById('customerMetaDisplay').textContent = 'Preencha o formulário para acompanhar a fila em tempo real.';
         document.getElementById('queueNumber').textContent = '--';
         document.getElementById('queueCpf').textContent = '--';
+        document.getElementById('queuePhone').textContent = '--';
         setStatusBadge('Aguardando dados', 'waiting');
         return;
     }
@@ -362,6 +408,7 @@ function renderCustomerStatus(data) {
     const isSeated = current.status === 'seated' || Boolean(current.tableId);
     const isWaiting = current.status === 'waiting' || current.status === 'confirmed';
     const cpf = formatCpf(current.cpf || customerState.cpf);
+    const phone = formatPhone(current.phone || customerState.phone);
 
     document.getElementById('customerNameDisplay').textContent = current.name;
     document.getElementById('customerMetaDisplay').textContent = isSeated
@@ -369,6 +416,7 @@ function renderCustomerStatus(data) {
         : 'Acompanhe sua posição aqui enquanto aguarda a chamada.';
     document.getElementById('queueNumber').textContent = current.number || '--';
     document.getElementById('queueCpf').textContent = cpf;
+    document.getElementById('queuePhone').textContent = phone || '--';
 
     if (isSeated) {
         setStatusBadge('Na mesa', 'seated');
@@ -382,13 +430,16 @@ function renderCustomerStatus(data) {
 function syncFromLocalStorage() {
     const name = localStorage.getItem('customerName') || '';
     const cpf = localStorage.getItem('customerCpf') || '';
+    const phone = localStorage.getItem('customerPhone') || '';
     const guests = localStorage.getItem('customerGuests') || '2';
 
     document.getElementById('name').value = name;
     document.getElementById('cpf').value = cpf;
+    document.getElementById('phone').value = phone;
     document.getElementById('guests').value = guests;
     customerState.name = name;
     customerState.cpf = cpf;
+    customerState.phone = phone;
     customerState.guests = guests;
 }
 
@@ -409,6 +460,8 @@ function showTableReadyNotification(tableLabel, tableId) {
     const message = `Sua vez chegou. Dirija-se à ${tableLabel}.`;
     setMessage('queueSuccess', message, true);
     setStatusBadge('Mesa chamada', 'seated');
+    showNotificationAlert(message);
+    playNotificationSound();
 
     if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('Haruyama Sushi', {
@@ -418,12 +471,51 @@ function showTableReadyNotification(tableLabel, tableId) {
     }
 }
 
+function showNotificationAlert(message) {
+    const alertBox = document.getElementById('notificationAlert');
+    const alertText = document.getElementById('notificationAlertText');
+    alertText.textContent = message;
+    alertBox.classList.remove('hidden');
+}
+
+function hideNotificationAlert() {
+    const alertBox = document.getElementById('notificationAlert');
+    alertBox.classList.add('hidden');
+}
+
+function playNotificationSound() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const audioContext = new AudioContext();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 880;
+        gainNode.gain.value = 0.12;
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.18);
+
+        oscillator.onended = () => {
+            audioContext.close();
+        };
+    } catch (error) {
+        console.warn('Falha ao reproduzir som de notificação:', error);
+    }
+}
+
 document.getElementById('queueForm').addEventListener('submit', (e) => {
     e.preventDefault();
     hideFeedback();
 
     const name = document.getElementById('name').value.trim();
     const cpf = document.getElementById('cpf').value.replace(/\D/g, '');
+    const phone = document.getElementById('phone').value.replace(/\D/g, '');
     const guests = Number(document.getElementById('guests').value);
 
     if (!socket) {
@@ -433,13 +525,15 @@ document.getElementById('queueForm').addEventListener('submit', (e) => {
 
     localStorage.setItem('customerName', name);
     localStorage.setItem('customerCpf', cpf);
+    localStorage.setItem('customerPhone', phone);
     localStorage.setItem('customerGuests', String(guests));
 
     customerState.name = name;
     customerState.cpf = cpf;
+    customerState.phone = phone;
     customerState.guests = guests;
 
-    socket.emit('add-to-queue', { name, cpf, guests });
+    socket.emit('add-to-queue', { name, cpf, phone, guests });
 });
 
 socket.on('queue-number', (number) => {
@@ -473,6 +567,7 @@ socket?.on('queue-error', (payload) => {
 
 socket?.on('queue-update', (data) => {
     renderCustomerStatus(data);
+    renderLiveQueue(data);
 });
 
 document.getElementById('name').addEventListener('input', () => {
@@ -488,6 +583,7 @@ function loadQueueState() {
         .then((res) => res.json())
         .then((data) => {
             renderCustomerStatus(data);
+            renderLiveQueue(data);
         })
         .catch(() => {
             setMessage('queueError', 'Não foi possível carregar o estado da fila no momento.', true);
